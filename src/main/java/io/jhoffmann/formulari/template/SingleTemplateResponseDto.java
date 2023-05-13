@@ -2,7 +2,7 @@ package io.jhoffmann.formulari.template;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
-public class CreateTemplateRequestDto {
+public class SingleTemplateResponseDto {
     private String templateName;
 
     @JsonUnwrapped
@@ -25,9 +25,4 @@ public class CreateTemplateRequestDto {
         this.components = components;
     }
 
-    
-
-   
-
-    
 }

@@ -10,13 +10,13 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "template")
-public class TemplateEntity extends AbstractEntity{
+public class TemplateEntity extends AbstractEntity {
 
     private String name;
 
     @Column(name = "components", nullable = false, columnDefinition = "TEXT")
     @Type(JsonType.class)
-    private Components components;
+    private ComponentWrapper components;
 
     public String getName() {
         return name;
@@ -26,16 +26,12 @@ public class TemplateEntity extends AbstractEntity{
         this.name = name;
     }
 
-    public Components getComponents() {
+    public ComponentWrapper getComponents() {
         return components;
     }
 
-    public void setComponents(Components components) {
+    public void setComponents(ComponentWrapper components) {
         this.components = components;
     }
 
-
-
-    
-    
 }

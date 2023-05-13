@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.jhoffmann.formulari.model.AbstractComponent;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Components implements Serializable {
+public class ComponentWrapper implements Serializable {
     private List<? extends AbstractComponent> components;
 
     public List<? extends AbstractComponent> getComponents() {
@@ -19,5 +19,4 @@ public class Components implements Serializable {
         this.components = components;
     }
 
-    
 }

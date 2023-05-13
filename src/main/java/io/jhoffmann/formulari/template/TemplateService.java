@@ -14,14 +14,17 @@ public class TemplateService {
         this.repository = repository;
     }
 
-    public TemplateEntity createTemplate(String templateName, Components components) {
+    public TemplateEntity createTemplate(String templateName, List<? extends AbstractComponent> components) {
 
         TemplateEntity template = new TemplateEntity();
         template.setName(templateName);
-        template.setComponents(components);
+
+        ComponentWrapper components2 = new ComponentWrapper();
+        components2.setComponents(components);
+
+        template.setComponents(components2);
 
         return repository.save(template);
     }
 
-    
 }

@@ -16,11 +16,16 @@ public class CreateTemplateController {
     }
 
     @PostMapping
-    public ResponseEntity<TemplateEntity> createTemplate(@RequestBody CreateTemplateRequestDto dto) {
+    public ResponseEntity<SingleTemplateResponseDto> createTemplate(@RequestBody CreateTemplateRequestDto dto) {
 
-        TemplateEntity template = templateService.createTemplate(dto.getTemplateName(), dto.getComponents());
+        TemplateEntity template = templateService.createTemplate(dto.getTemplateName(),
+                dto.getComponents().getComponents());
+        
+        SingleTemplateResponseDto responseDto = new SingleTemplateResponseDto();
+        responseDto.setComponents(template.getComponents());
+        responseDto.setTemplateName(dto.getTemplateName());
 
-        return ResponseEntity.ok(template);
+        return ResponseEntity.ok(responseDto);
     }
 
 
