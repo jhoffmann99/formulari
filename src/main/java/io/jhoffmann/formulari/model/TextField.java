@@ -1,11 +1,10 @@
 package io.jhoffmann.formulari.model;
 
 public class TextField extends AbstractComponent {
-/*     private int length;
-    private boolean multiLine; */
-    private String value;
+    private int length;
+    private boolean multiLine;
     
-    /* public int getLength() {
+     public int getLength() {
         return length;
     }
     public void setLength(int length) {
@@ -16,13 +15,6 @@ public class TextField extends AbstractComponent {
     }
     public void setMultiLine(boolean multiLine) {
         this.multiLine = multiLine;
-    } */
-    public String getValue() {
-        return value;
     }
-    public void setValue(String value) {
-        this.value = value;
-    }
-
     
 }

@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("template")
 public class TemplateController {
@@ -20,7 +22,7 @@ public class TemplateController {
     }
 
     @PostMapping
-    public ResponseEntity<SingleTemplateResponseDto> createTemplate(@RequestBody CreateTemplateRequestDto dto) {
+    public ResponseEntity<SingleTemplateResponseDto> createTemplate(@Valid @RequestBody CreateTemplateRequestDto dto) {
 
         TemplateEntity template = templateService.createTemplate(dto.getTemplateName(),
                 dto.getComponents().getComponents());

@@ -3,7 +3,6 @@ package io.jhoffmann.formulari.model;
 public class NumberField extends AbstractComponent {
     private Double min;
     private Double max;
-    private Number value;
     
     private boolean hasMin() {
         return min != null;
@@ -24,14 +23,6 @@ public class NumberField extends AbstractComponent {
     }
     public void setMax(Double max) {
         this.max = max;
-    }
-
-    public Number getValue() {
-        return value;
-    }
-
-    public void setValue(Number value) {
-        this.value = value;
     }
 
     
