@@ -1,7 +1,7 @@
 package io.jhoffmann.formulari.check;
 
 public enum TransmissionType {
-    E_MAIL("E-Mail"), SMS("SMS"), LINK("LINK");
+    E_MAIL("E-Mail"), SMS("SMS"), LINK("Link");
 
     TransmissionType(String value) {
         this.value = value;

@@ -1,7 +1,6 @@
 package io.jhoffmann.formulari.check;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import io.jhoffmann.formulari.AbstractEntity;
 import io.jhoffmann.formulari.template.TemplateEntity;
@@ -16,17 +15,17 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "jh_check")
-public class CheckEntity extends AbstractEntity{
+public class CheckEntity extends AbstractEntity {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name="template_id", nullable=false)
+    @JoinColumn(name = "template_id", nullable = false)
     private TemplateEntity template;
-
-    private List<String> recipients;
 
     @Enumerated(EnumType.STRING)
     private TransmissionType transmissionType;
+
+    private CheckStatus status;
 
     private LocalDateTime createdAt;
 
@@ -46,14 +45,6 @@ public class CheckEntity extends AbstractEntity{
 
     public void setTemplate(TemplateEntity template) {
         this.template = template;
-    }
-
-    public List<String> getRecipients() {
-        return recipients;
-    }
-
-    public void setRecipients(List<String> recipients) {
-        this.recipients = recipients;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -79,7 +70,14 @@ public class CheckEntity extends AbstractEntity{
     public void setTransmissionType(TransmissionType transmissionType) {
         this.transmissionType = transmissionType;
     }
-    
+
+    public CheckStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(CheckStatus status) {
+        this.status = status;
+    }
 
     @PrePersist
     private void prePersist() {
@@ -91,8 +89,4 @@ public class CheckEntity extends AbstractEntity{
         this.lastModifiedAt = LocalDateTime.now();
     }
 
-    // Status
-    // DRAFT, REQUESTED, ARCHIVED, TRASH
-
-    
 }

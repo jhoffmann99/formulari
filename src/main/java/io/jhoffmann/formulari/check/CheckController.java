@@ -1,5 +1,7 @@
 package io.jhoffmann.formulari.check;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,5 +12,10 @@ public class CheckController {
 
     public CheckController(CheckService service) {
         this.service = service;
+    }
+
+    @PostMapping
+    public void addCheck(@RequestBody CreateCheckRequestDto dto) {
+        service.createCheck(dto.getName(), dto.getTransmissionType(), dto.getTemplateName(), dto.getRecipients());
     }
 }
