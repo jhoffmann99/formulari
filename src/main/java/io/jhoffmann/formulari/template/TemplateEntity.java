@@ -9,7 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "template")
+@Table(name = "jh_template")
 public class TemplateEntity extends AbstractEntity {
 
     private String name;
