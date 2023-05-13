@@ -1,6 +1,7 @@
 package io.jhoffmann.formulari.template;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,10 @@ public class TemplateService {
         template.setComponents(components2);
 
         return repository.save(template);
+    }
+
+    public Optional<TemplateEntity> findTemplateByName(String templateName) {
+        return repository.findByName(templateName);
     }
 
 }
