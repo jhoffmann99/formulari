@@ -8,9 +8,13 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import io.hypersistence.utils.hibernate.type.json.JsonType;
+import org.hibernate.annotations.Type;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Entity
-@Table(name = "check_recipient")
+@Table(name = "jh_check_recipient")
 public class CheckRecipientEntity extends AbstractEntity {
     @Column(name = "first_name")
     private String firstName;
@@ -31,6 +35,10 @@ public class CheckRecipientEntity extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "check_id", nullable = false)
     private CheckEntity check;
+
+    @Column(name = "data", nullable = true, columnDefinition = "json")
+    @Type(JsonType.class)
+    private JsonNode data;
 
     public String getFirstName() {
         return firstName;
@@ -78,6 +86,14 @@ public class CheckRecipientEntity extends AbstractEntity {
 
     public void setCheck(CheckEntity check) {
         this.check = check;
+    }
+
+    public JsonNode getData() {
+        return data;
+    }
+
+    public void setData(JsonNode data) {
+        this.data = data;
     }
 
 }
