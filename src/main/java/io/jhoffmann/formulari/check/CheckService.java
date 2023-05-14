@@ -1,12 +1,16 @@
 package io.jhoffmann.formulari.check;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import io.jhoffmann.formulari.exception.NotFoundException;
 import io.jhoffmann.formulari.exception.ValidationException;
+import io.jhoffmann.formulari.model.AbstractComponent;
 import io.jhoffmann.formulari.template.TemplateEntity;
 import io.jhoffmann.formulari.template.TemplateRepository;
 import io.jhoffmann.formulari.util.EmailValidator;
@@ -54,6 +58,7 @@ public class CheckService {
             checkRecipient.setSalutation(recipient.getSalutation());
             checkRecipient.setEmail(recipient.getEmail());
             checkRecipient.setMobilePhone(recipient.getMobilePhone());
+            checkRecipient.setUid(UUID.randomUUID().toString());
             checkRecipient.setCheck(savedCheck);
             
             checkRecipientEntities.add(checkRecipient);
@@ -67,7 +72,12 @@ public class CheckService {
         switch (transmissionType) {
             case E_MAIL -> validateEmailCheck(recipients);
             case SMS -> validateSmsCheck(recipients);
+            case LINK -> validateLinkCheck(recipients);
         }
+    }
+
+    private void validateLinkCheck(List<CheckRecipientDto> recipients) {
+        // TODO add implementation
     }
 
     private void validateSmsCheck(List<CheckRecipientDto> recipients) {
@@ -83,6 +93,70 @@ public class CheckService {
 
         if (!isValid) {
             throw new ValidationException("At least one email adress of the recipients is invalid");
+        }
+    }
+
+    public void checkReply(String uid, List<FieldReply> data) {
+        Optional<CheckRecipientEntity> optCheckRecipient = checkRecipientRepository.findByUid(uid);
+
+        if (optCheckRecipient.isEmpty()) {
+            throw new NotFoundException();
+        }
+
+        CheckRecipientEntity checkRecipient = optCheckRecipient.get();
+
+        CheckEntity check = checkRecipient.getCheck();
+
+        TemplateEntity template = check.getTemplate();
+        
+        List<? extends AbstractComponent> templateFields = template.getComponents().getComponents();
+
+        validateCheckReply(templateFields, data);
+
+
+        checkRecipient.setData(data);
+
+        checkRecipientRepository.save(checkRecipient);
+    }
+
+    private void validateCheckReply(List<? extends AbstractComponent> templateFields, List<FieldReply> data) {
+        if (templateFields.size() != data.size()) {
+            throw new ValidationException("number of provided fields does not match the expected number of fields");
+        }
+
+        templateFields.forEach(templateField -> {
+            int fieldMatch = 0;
+            for (FieldReply fieldReply : data) {
+                if (templateField.getName().equals(fieldReply.getName())) {
+                    fieldMatch += 1;
+                    switch (fieldReply.getType()) {
+                        case NUMBER -> validateNumberFieldValue(fieldReply.getValue());
+                        case TEXT -> validateTextFieldValue(fieldReply.getValue());
+                        case DATE -> validateDateFieldValue(fieldReply.getValue());
+                    }
+                }
+            }
+            if (fieldMatch != 1) {
+                throw new ValidationException("the field either exists more than once or even does not exist at all");
+            }
+        });
+    }
+
+    private void validateDateFieldValue(Object value) {
+        if (!(value instanceof LocalDate)) {
+            throw new ValidationException("provided value is not of type LocalDate");
+        }
+    }
+
+    private void validateTextFieldValue(Object value) {
+        if (!(value instanceof String)) {
+            throw new ValidationException("provided value is not of type String");
+        }
+    }
+
+    private void validateNumberFieldValue(Object value) {
+        if (!(value instanceof Number)) {
+            throw new ValidationException("provided value is not of type Number");
         }
     }
     

@@ -8,9 +8,9 @@ import jakarta.validation.constraints.NotBlank;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
-        @Type(value = TextField.class, name = "text"),
-        @Type(value = NumberField.class, name = "number"),
-        @Type(value = DateField.class, name = "date")
+        @Type(value = TextField.class, name = "TEXT"),
+        @Type(value = NumberField.class, name = "NUMBER"),
+        @Type(value = DateField.class, name = "DATE")
 })
 public abstract class AbstractComponent {
     @NotBlank
@@ -21,7 +21,10 @@ public abstract class AbstractComponent {
     @NotBlank
     private String hint;
 
-    public AbstractComponent() {}
+    public AbstractComponent() {
+    }
+    
+    
     
     public String getName() {
         return name;
@@ -48,6 +51,5 @@ public abstract class AbstractComponent {
     public void setHint(String hint) {
         this.hint = hint;
     }
-
     
 }
