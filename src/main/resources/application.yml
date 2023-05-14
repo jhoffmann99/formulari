@@ -10,3 +10,8 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: create
+email:
+  api-key: api-key-here
+  sender-email: no-reply@formulari.io
+  sender-name: Formulari
+  
