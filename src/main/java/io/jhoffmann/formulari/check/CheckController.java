@@ -16,11 +16,14 @@ public class CheckController {
 
     @PostMapping
     public void addCheck(@RequestBody CreateCheckRequestDto dto) {
-        service.createCheck(dto.getName(), dto.getTransmissionType(), dto.getTemplateName(), dto.getRecipients());
+        CheckEntity savedCheck = service.createCheck(dto.getName(), dto.getTransmissionType(), dto.getTemplateName(),
+                dto.getRecipients());
+                
+        service.createCheckRecipients(savedCheck, dto.getRecipients());
     }
 
     @PostMapping("reply")
-    public void checkReply(@RequestBody CheckReplyRequestDto dto) {
-        service.checkReply(dto.getUid(), dto.getData());
+    public void replyCheck(@RequestBody CheckReplyRequestDto dto) {
+        service.replyCheck(dto.getUid(), dto.getData());
     }
 }

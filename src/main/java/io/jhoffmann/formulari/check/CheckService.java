@@ -21,15 +21,15 @@ public class CheckService {
     private final CheckRepository checkRepository;
     private final CheckRecipientRepository checkRecipientRepository;
     private final TemplateRepository templateRepository;
-    
 
-    public CheckService(CheckRepository checkRepository, CheckRecipientRepository checkRecipientRepository, TemplateRepository templateRepository) {
+    public CheckService(CheckRepository checkRepository, CheckRecipientRepository checkRecipientRepository,
+            TemplateRepository templateRepository) {
         this.checkRepository = checkRepository;
         this.checkRecipientRepository = checkRecipientRepository;
         this.templateRepository = templateRepository;
     }
 
-    public void createCheck(String name, TransmissionType transmissionType, String templateName,
+    public CheckEntity createCheck(String name, TransmissionType transmissionType, String templateName,
             List<CheckRecipientDto> recipients) {
         validateCheck(transmissionType, recipients);
 
@@ -42,13 +42,18 @@ public class CheckService {
         TemplateEntity template = optTemplate.get();
 
         CheckEntity check = new CheckEntity();
-        
+
         check.setTemplate(template);
         check.setName(name);
         check.setTransmissionType(transmissionType);
+        check.setExpectedReplies(recipients.size());
 
         final CheckEntity savedCheck = checkRepository.save(check);
 
+        return savedCheck;
+    }
+
+    public List<CheckRecipientEntity> createCheckRecipients(CheckEntity check, List<CheckRecipientDto> recipients) {
         List<CheckRecipientEntity> checkRecipientEntities = new ArrayList<>();
 
         recipients.forEach(recipient -> {
@@ -59,13 +64,12 @@ public class CheckService {
             checkRecipient.setEmail(recipient.getEmail());
             checkRecipient.setMobilePhone(recipient.getMobilePhone());
             checkRecipient.setUid(UUID.randomUUID().toString());
-            checkRecipient.setCheck(savedCheck);
-            
+            checkRecipient.setCheck(check);
+
             checkRecipientEntities.add(checkRecipient);
         });
-        
-        checkRecipientRepository.saveAllAndFlush(checkRecipientEntities);
 
+        return checkRecipientRepository.saveAllAndFlush(checkRecipientEntities);
     }
 
     private void validateCheck(TransmissionType transmissionType, List<CheckRecipientDto> recipients) {
@@ -96,7 +100,7 @@ public class CheckService {
         }
     }
 
-    public void checkReply(String uid, List<FieldReply> data) {
+    public void replyCheck(String uid, List<FieldReply> data) {
         Optional<CheckRecipientEntity> optCheckRecipient = checkRecipientRepository.findByUid(uid);
 
         if (optCheckRecipient.isEmpty()) {
@@ -105,18 +109,24 @@ public class CheckService {
 
         CheckRecipientEntity checkRecipient = optCheckRecipient.get();
 
+        if (checkRecipient.isCompleted()) {
+            throw new RuntimeException("check already replied");
+       } 
+
         CheckEntity check = checkRecipient.getCheck();
 
         TemplateEntity template = check.getTemplate();
-        
+
         List<? extends AbstractComponent> templateFields = template.getComponents().getComponents();
 
         validateCheckReply(templateFields, data);
 
-
         checkRecipient.setData(data);
 
         checkRecipientRepository.save(checkRecipient);
+
+        check.increaseTotalReplies();
+        checkRepository.save(check);
     }
 
     private void validateCheckReply(List<? extends AbstractComponent> templateFields, List<FieldReply> data) {
@@ -159,6 +169,5 @@ public class CheckService {
             throw new ValidationException("provided value is not of type Number");
         }
     }
-    
 
 }

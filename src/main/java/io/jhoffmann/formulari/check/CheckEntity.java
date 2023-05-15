@@ -25,6 +25,10 @@ public class CheckEntity extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private TransmissionType transmissionType;
 
+    private int expectedReplies;
+
+    private int totalReplies;
+
     private CheckStatus status;
 
     private LocalDateTime createdAt;
@@ -79,6 +83,26 @@ public class CheckEntity extends AbstractEntity {
         this.status = status;
     }
 
+    public int getExpectedReplies() {
+        return expectedReplies;
+    }
+
+    public void setExpectedReplies(int expectedReplies) {
+        this.expectedReplies = expectedReplies;
+    }
+
+    public int getTotalReplies() {
+        return totalReplies;
+    }
+
+    public boolean isCompleted() {
+        return expectedReplies == totalReplies;
+    }
+
+    public void setTotalReplies(int totalReplies) {
+        this.totalReplies = totalReplies;
+    }
+
     @PrePersist
     private void prePersist() {
         this.createdAt = LocalDateTime.now();
@@ -87,6 +111,10 @@ public class CheckEntity extends AbstractEntity {
     @PreUpdate
     private void preUpdate() {
         this.lastModifiedAt = LocalDateTime.now();
+    }
+
+    public void increaseTotalReplies() {
+        totalReplies += 1;
     }
 
 }

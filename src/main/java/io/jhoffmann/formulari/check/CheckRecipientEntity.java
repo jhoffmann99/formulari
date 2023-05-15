@@ -109,4 +109,8 @@ public class CheckRecipientEntity extends AbstractEntity {
         this.uid = uid;
     }
 
+    public boolean isCompleted() {
+        return data != null;
+    }
+
 }
