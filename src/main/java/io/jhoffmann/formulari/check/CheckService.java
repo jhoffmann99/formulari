@@ -8,9 +8,14 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import io.jhoffmann.formulari.email.Email;
+import io.jhoffmann.formulari.email.EmailService;
 import io.jhoffmann.formulari.exception.NotFoundException;
 import io.jhoffmann.formulari.exception.ValidationException;
 import io.jhoffmann.formulari.model.AbstractComponent;
+import io.jhoffmann.formulari.model.DateField;
+import io.jhoffmann.formulari.model.NumberField;
+import io.jhoffmann.formulari.model.TextField;
 import io.jhoffmann.formulari.template.TemplateEntity;
 import io.jhoffmann.formulari.template.TemplateRepository;
 import io.jhoffmann.formulari.util.EmailValidator;
@@ -21,12 +26,14 @@ public class CheckService {
     private final CheckRepository checkRepository;
     private final CheckRecipientRepository checkRecipientRepository;
     private final TemplateRepository templateRepository;
+    private final EmailService emailService;
 
     public CheckService(CheckRepository checkRepository, CheckRecipientRepository checkRecipientRepository,
-            TemplateRepository templateRepository) {
+            TemplateRepository templateRepository, EmailService emailService) {
         this.checkRepository = checkRepository;
         this.checkRecipientRepository = checkRecipientRepository;
         this.templateRepository = templateRepository;
+        this.emailService = emailService;
     }
 
     public CheckEntity createCheck(String name, TransmissionType transmissionType, String templateName,
@@ -111,7 +118,7 @@ public class CheckService {
 
         if (checkRecipient.isCompleted()) {
             throw new RuntimeException("check already replied");
-       } 
+        }
 
         CheckEntity check = checkRecipient.getCheck();
 
@@ -139,10 +146,12 @@ public class CheckService {
             for (FieldReply fieldReply : data) {
                 if (templateField.getName().equals(fieldReply.getName())) {
                     fieldMatch += 1;
-                    switch (fieldReply.getType()) {
-                        case NUMBER -> validateNumberFieldValue(fieldReply.getValue());
-                        case TEXT -> validateTextFieldValue(fieldReply.getValue());
-                        case DATE -> validateDateFieldValue(fieldReply.getValue());
+                    if (templateField instanceof TextField) {
+                        validateTextFieldValue(fieldReply.getValue());
+                    } else if (templateField instanceof DateField) {
+                        validateDateFieldValue(fieldReply.getValue());
+                    } else if (templateField instanceof NumberField) {
+                        validateNumberFieldValue(fieldReply.getValue());
                     }
                 }
             }
@@ -168,6 +177,38 @@ public class CheckService {
         if (!(value instanceof Number)) {
             throw new ValidationException("provided value is not of type Number");
         }
+    }
+
+    public void informCheckRecipients(List<CheckRecipientEntity> checkRecipients) {
+        checkRecipients.parallelStream().forEach(recipient -> sendCheckEmail(recipient));
+    }
+
+    private void sendCheckEmail(CheckRecipientEntity checkRecipient) {
+        Email email = new Email();
+        email.setRecipients(List.of(checkRecipient.getEmail()));
+        email.setSubject("formulari Check");
+        email.setTextPlain(checkRecipient.getUid());
+
+        System.out.println(checkRecipient.getUid());
+       // emailService.sendEmail(email);
+    }
+
+    public Optional<CheckRecipientEntity> findCheckRecipientByUid(String uid) {
+        return checkRecipientRepository.findByUid(uid);
+    }
+
+    public TemplateEntity getTemplateForCheckRecipientUid(String uid) {
+        Optional<CheckRecipientEntity> optCheckRecipient = this.findCheckRecipientByUid(uid);
+
+        if (optCheckRecipient.isEmpty()) {
+            throw new NotFoundException("Datensatz nicht gefunden");
+        }
+
+        CheckRecipientEntity checkRecipient = optCheckRecipient.get();
+
+        TemplateEntity template = checkRecipient.getCheck().getTemplate();
+
+        return template;
     }
 
 }

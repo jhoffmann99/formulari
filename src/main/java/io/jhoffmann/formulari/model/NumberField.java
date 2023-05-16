@@ -33,6 +33,5 @@ public class NumberField extends AbstractComponent {
     public void setFieldType(FieldType fieldType) {
         this.fieldType = fieldType;
     }
-
     
 }

@@ -2,8 +2,6 @@ package io.jhoffmann.formulari.check;
 
 import java.util.List;
 
-import io.jhoffmann.formulari.model.FieldType;
-
 public class CheckReplyRequestDto {
     private String uid;
     private List<FieldReply> data;
@@ -26,7 +24,6 @@ public class CheckReplyRequestDto {
 
 class FieldReply {
     private String name;
-    private FieldType type;
     private Object value;
     
     public String getName() {
@@ -35,12 +32,7 @@ class FieldReply {
     public void setName(String name) {
         this.name = name;
     }
-    public FieldType getType() {
-        return type;
-    }
-    public void setType(FieldType type) {
-        this.type = type;
-    }
+
     public Object getValue() {
         return value;
     }

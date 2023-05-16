@@ -20,8 +20,10 @@ public class TextField extends AbstractComponent {
     public FieldType getFieldType() {
         return fieldType;
     }
+
     public void setFieldType(FieldType fieldType) {
         this.fieldType = fieldType;
-    }
+    }    
+    
     
 }

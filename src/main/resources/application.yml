@@ -11,7 +11,7 @@ spring:
     hibernate:
       ddl-auto: create
 email:
-  api-key: api-key-here
+  api-key: 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
   sender-email: no-reply@formulari.io
   sender-name: Formulari
   

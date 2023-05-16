@@ -21,10 +21,9 @@ public abstract class AbstractComponent {
     @NotBlank
     private String hint;
 
+
     public AbstractComponent() {
     }
-    
-    
     
     public String getName() {
         return name;
