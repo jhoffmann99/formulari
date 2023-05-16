@@ -32,4 +32,8 @@ public class TemplateService {
         return repository.findByName(templateName);
     }
 
+    public List<String> findAll() {
+        return repository.findAll().stream().map(TemplateEntity::getName).toList();
+    }
+
 }

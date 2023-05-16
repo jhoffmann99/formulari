@@ -45,5 +45,13 @@ public class TemplateController {
         return ResponseEntity.ok(responseDto);
     }
 
+    @GetMapping
+    public ResponseEntity<AllTemplatesResponseDto> getAllTemplates() {
+        AllTemplatesResponseDto responseDto = new AllTemplatesResponseDto();
+        responseDto.setTemplates(templateService.findAll());
+
+        return ResponseEntity.ok(responseDto);
+    }
+
 
 }
