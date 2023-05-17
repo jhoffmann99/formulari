@@ -21,7 +21,7 @@ public class User {
   private Long id;
 
   @NotBlank
-  @Size(max = 20)
+  @Size(max = 50)
   private String username;
 
   @NotBlank
@@ -40,8 +40,8 @@ public class User {
   public User() {
   }
 
-  public User(String username, String email, String password) {
-    this.username = username;
+  public User(String email, String password) {
+    this.username = email;
     this.email = email;
     this.password = password;
     addRolle(Role.ROLE_USER);

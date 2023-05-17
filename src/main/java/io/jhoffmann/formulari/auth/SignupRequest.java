@@ -3,15 +3,21 @@ package io.jhoffmann.formulari.auth;
 import jakarta.validation.constraints.*;
  
 public class SignupRequest {
-
-    @NotBlank
-    @Size(min = 3, max = 20)
-    private String username;
  
     @NotBlank
     @Size(max = 50)
     @Email
     private String email;
+
+    @NotBlank
+    private String firstName;
+
+    @NotBlank
+    private String lastName;
+
+    private String gender;
+
+    private String dateOfBirth;
     
     @NotBlank
     @Size(min = 6, max = 40)
@@ -34,11 +40,37 @@ public class SignupRequest {
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getFirstName() {
+        return firstName;
     }
- 
-    public void setUsername(String username) {
-        this.username = username;
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    
 }
