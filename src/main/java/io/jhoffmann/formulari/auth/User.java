@@ -33,10 +33,8 @@ public class User {
   @Size(max = 120)
   private String password;
 
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(name = "user_roles", 
-             joinColumns = @JoinColumn(name = "user_id"),
-             inverseJoinColumns = @JoinColumn(name = "role_id"))
+  @Enumerated(EnumType.STRING)
+  @ElementCollection(fetch = FetchType.EAGER)
   private Set<Role> roles = new HashSet<>();
 
   public User() {
@@ -46,6 +44,7 @@ public class User {
     this.username = username;
     this.email = email;
     this.password = password;
+    addRolle(Role.ROLE_USER);
   }
 
   public Long getId() {
@@ -82,9 +81,13 @@ public class User {
 
   public Set<Role> getRoles() {
     return roles;
-  }
+}
 
-  public void setRoles(Set<Role> roles) {
+public void setRoles(Set<Role> roles) {
     this.roles = roles;
-  }
+}
+
+public void addRolle(Role role) {
+    roles.add(role);
+}
 }
