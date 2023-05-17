@@ -3,6 +3,8 @@ package io.jhoffmann.formulari.template;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +16,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("template")
+@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
 public class TemplateController {
     private final TemplateService templateService;
 
@@ -22,6 +25,7 @@ public class TemplateController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<SingleTemplateResponseDto> createTemplate(@Valid @RequestBody CreateTemplateRequestDto dto) {
 
         TemplateEntity template = templateService.createTemplate(dto.getTemplateName(),
@@ -33,6 +37,7 @@ public class TemplateController {
     }
     
     @GetMapping("{templateName}")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<SingleTemplateResponseDto> getSingleTemplate(@PathVariable String templateName) {
         Optional<TemplateEntity> optTemplate = templateService.findTemplateByName(templateName);
 
@@ -46,6 +51,7 @@ public class TemplateController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     public ResponseEntity<AllTemplatesResponseDto> getAllTemplates() {
         AllTemplatesResponseDto responseDto = new AllTemplatesResponseDto();
         responseDto.setTemplates(templateService.findAll());
