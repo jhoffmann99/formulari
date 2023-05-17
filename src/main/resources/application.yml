@@ -14,4 +14,7 @@ email:
   api-key: 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
   sender-email: no-reply@formulari.io
   sender-name: Formulari
-  
+# App Properties
+bezkoder.app.jwtCookieName: bezkoder
+bezkoder.app.jwtSecret: bezKoderSecretKey
+bezkoder.app.jwtExpirationMs: 86400000

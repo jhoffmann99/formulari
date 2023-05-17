@@ -1,4 +1,4 @@
-package io.jhoffmann.formulari;
+package io.jhoffmann.formulari.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
