@@ -37,7 +37,6 @@ public class CheckController {
     }
 
     @PostMapping("reply")
-    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     public void replyCheck(@RequestBody CheckReplyRequestDto dto) {
         service.replyCheck(dto.getUid(), dto.getData());
     }
@@ -54,5 +53,16 @@ public class CheckController {
 
         return ResponseEntity.ok(responseDto);
 
+    }
+
+    @GetMapping("inbox")
+    public ResponseEntity<CheckRecipientsResponseDto> getCheckInbox() {
+        List<CheckRecipientEntity> checkRecipients = service.getCheckReplies();
+       
+        CheckRecipientsResponseDto response = new CheckRecipientsResponseDto();
+
+        response.setRecipients(checkRecipients);
+
+        return ResponseEntity.ok(response);
     }
 }

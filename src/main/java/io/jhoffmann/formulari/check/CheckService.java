@@ -162,7 +162,10 @@ public class CheckService {
     }
 
     private void validateDateFieldValue(Object value) {
-        if (!(value instanceof LocalDate)) {
+
+        try {
+            LocalDate.parse((CharSequence) value);
+        } catch (Exception e) {
             throw new ValidationException("provided value is not of type LocalDate");
         }
     }
@@ -209,6 +212,10 @@ public class CheckService {
         TemplateEntity template = checkRecipient.getCheck().getTemplate();
 
         return template;
+    }
+
+    public List<CheckRecipientEntity> getCheckReplies() {
+        return checkRecipientRepository.findReplies();
     }
 
 }
