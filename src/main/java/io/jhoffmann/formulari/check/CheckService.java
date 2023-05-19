@@ -1,6 +1,7 @@
 package io.jhoffmann.formulari.check;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -107,7 +108,7 @@ public class CheckService {
         }
     }
 
-    public void replyCheck(String uid, List<FieldReply> data) {
+    public void answerCheck(String uid, List<FieldReply> data) {
         Optional<CheckRecipientEntity> optCheckRecipient = checkRecipientRepository.findByUid(uid);
 
         if (optCheckRecipient.isEmpty()) {
@@ -129,6 +130,7 @@ public class CheckService {
         validateCheckReply(templateFields, data);
 
         checkRecipient.setData(data);
+        checkRecipient.setAnswerAt(LocalDateTime.now());
 
         checkRecipientRepository.save(checkRecipient);
 
@@ -193,7 +195,7 @@ public class CheckService {
         email.setTextPlain(checkRecipient.getUid());
 
         System.out.println(checkRecipient.getUid());
-       // emailService.sendEmail(email);
+        // emailService.sendEmail(email);
     }
 
     public Optional<CheckRecipientEntity> findCheckRecipientByUid(String uid) {
@@ -216,6 +218,10 @@ public class CheckService {
 
     public List<CheckRecipientEntity> getCheckReplies() {
         return checkRecipientRepository.findReplies();
+    }
+
+    public List<CheckRecipientEntity> getOpenCheckReplies() {
+        return checkRecipientRepository.findOpenReplies();
     }
 
 }

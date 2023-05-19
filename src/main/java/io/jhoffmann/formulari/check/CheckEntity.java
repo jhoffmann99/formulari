@@ -106,6 +106,7 @@ public class CheckEntity extends AbstractEntity {
     @PrePersist
     private void prePersist() {
         this.createdAt = LocalDateTime.now();
+        this.status = CheckStatus.REQUESTED;
     }
 
     @PreUpdate

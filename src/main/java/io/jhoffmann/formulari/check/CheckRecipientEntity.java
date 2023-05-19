@@ -7,9 +7,11 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.Type;
@@ -44,6 +46,10 @@ public class CheckRecipientEntity extends AbstractEntity {
     @Column(name = "data", nullable = true, columnDefinition = "json")
     @Type(JsonType.class)
     private List<FieldReply> data;
+
+    private LocalDateTime answerAt;
+
+    private LocalDateTime createdAt;
 
     public String getFirstName() {
         return firstName;
@@ -111,6 +117,27 @@ public class CheckRecipientEntity extends AbstractEntity {
 
     public boolean isCompleted() {
         return data != null;
+    }
+
+    public LocalDateTime getAnswerAt() {
+        return answerAt;
+    }
+
+    public void setAnswerAt(LocalDateTime answerAt) {
+        this.answerAt = answerAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @PrePersist
+    private void prePersist() {
+        this.createdAt = LocalDateTime.now();
     }
 
 }

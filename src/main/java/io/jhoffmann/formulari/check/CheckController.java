@@ -37,8 +37,8 @@ public class CheckController {
     }
 
     @PostMapping("reply")
-    public void replyCheck(@RequestBody CheckReplyRequestDto dto) {
-        service.replyCheck(dto.getUid(), dto.getData());
+    public void answerCheck(@RequestBody CheckReplyRequestDto dto) {
+        service.answerCheck(dto.getUid(), dto.getData());
     }
 
     @GetMapping("template/{uid}")
@@ -58,7 +58,18 @@ public class CheckController {
     @GetMapping("inbox")
     public ResponseEntity<CheckRecipientsResponseDto> getCheckInbox() {
         List<CheckRecipientEntity> checkRecipients = service.getCheckReplies();
-       
+
+        CheckRecipientsResponseDto response = new CheckRecipientsResponseDto();
+
+        response.setRecipients(checkRecipients);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("outbox")
+    public ResponseEntity<CheckRecipientsResponseDto> getCheckOutbox() {
+        List<CheckRecipientEntity> checkRecipients = service.getOpenCheckReplies();
+
         CheckRecipientsResponseDto response = new CheckRecipientsResponseDto();
 
         response.setRecipients(checkRecipients);

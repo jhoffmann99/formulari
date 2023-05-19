@@ -11,4 +11,7 @@ public interface CheckRecipientRepository extends JpaRepository<CheckRecipientEn
 
     @Query("SELECT r FROM CheckRecipientEntity r WHERE data is not null")
     List<CheckRecipientEntity> findReplies();
+
+    @Query("SELECT r FROM CheckRecipientEntity r WHERE data is null")
+    List<CheckRecipientEntity> findOpenReplies();
 }
