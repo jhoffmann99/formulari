@@ -11,7 +11,9 @@ import jakarta.validation.constraints.NotBlank;
         @Type(value = TextField.class, name = "TEXT"),
         @Type(value = NumberField.class, name = "NUMBER"),
         @Type(value = DateField.class, name = "DATE"),
-        @Type(value = YesNoField.class, name = "YES_NO")
+        @Type(value = YesNoField.class, name = "YES_NO"),
+        @Type(value = TimeField.class, name = "TIME"),
+        @Type(value = DateTimeField.class, name = "DATE_TIME")
 })
 public abstract class AbstractComponent {
     @NotBlank

@@ -206,6 +206,19 @@ public class CheckService {
         System.out.println(checkRecipient.getUid());
         // emailService.sendEmail(email);
     }
+    
+    public void sendCheckReminder(CheckRecipientEntity checkRecipient) {
+        Email email = new Email();
+        email.setRecipients(List.of(checkRecipient.getEmail()));
+        email.setSubject("Erinnerung");
+        email.setTextPlain(checkRecipient.getUid());
+
+        System.out.println(checkRecipient.getUid());
+        emailService.sendEmail(email);
+    }
+
+
+
 
     public Optional<CheckRecipientEntity> findCheckRecipientByUid(String uid) {
         return checkRecipientRepository.findByUid(uid);

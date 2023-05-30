@@ -1,6 +1,7 @@
 package io.jhoffmann.formulari.check;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.jhoffmann.formulari.exception.NotFoundException;
 import io.jhoffmann.formulari.template.SingleTemplateResponseDto;
 import io.jhoffmann.formulari.template.TemplateEntity;
 
@@ -75,5 +77,20 @@ public class CheckController {
         response.setRecipients(checkRecipients);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("remind/{uid}")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
+    public void remind(@PathVariable String uid) {
+       
+        Optional<CheckRecipientEntity> optCheckRecipient = service.findCheckRecipientByUid(uid);
+
+        if(optCheckRecipient.isEmpty()){
+            throw new NotFoundException();
+        }
+
+        CheckRecipientEntity checkRecipient = optCheckRecipient.get();
+
+        this.service.sendCheckReminder(checkRecipient);
     }
 }
