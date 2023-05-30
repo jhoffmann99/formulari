@@ -10,7 +10,8 @@ import jakarta.validation.constraints.NotBlank;
 @JsonSubTypes({
         @Type(value = TextField.class, name = "TEXT"),
         @Type(value = NumberField.class, name = "NUMBER"),
-        @Type(value = DateField.class, name = "DATE")
+        @Type(value = DateField.class, name = "DATE"),
+        @Type(value = YesNoField.class, name = "YES_NO")
 })
 public abstract class AbstractComponent {
     @NotBlank

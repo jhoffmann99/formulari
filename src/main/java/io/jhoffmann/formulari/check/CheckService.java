@@ -17,6 +17,7 @@ import io.jhoffmann.formulari.model.AbstractComponent;
 import io.jhoffmann.formulari.model.DateField;
 import io.jhoffmann.formulari.model.NumberField;
 import io.jhoffmann.formulari.model.TextField;
+import io.jhoffmann.formulari.model.YesNoField;
 import io.jhoffmann.formulari.template.TemplateEntity;
 import io.jhoffmann.formulari.template.TemplateRepository;
 import io.jhoffmann.formulari.util.EmailValidator;
@@ -154,6 +155,8 @@ public class CheckService {
                         validateDateFieldValue(fieldReply.getValue());
                     } else if (templateField instanceof NumberField) {
                         validateNumberFieldValue(fieldReply.getValue());
+                    } else if (templateField instanceof YesNoField) {
+                        validateYesNoFieldValue(fieldReply.getValue());
                     }
                 }
             }
@@ -161,6 +164,12 @@ public class CheckService {
                 throw new ValidationException("the field either exists more than once or even does not exist at all");
             }
         });
+    }
+
+    private void validateYesNoFieldValue(Object value) {
+        if (!(value instanceof Boolean)) {
+            throw new ValidationException("provided value is not of type Boolean");
+        }
     }
 
     private void validateDateFieldValue(Object value) {

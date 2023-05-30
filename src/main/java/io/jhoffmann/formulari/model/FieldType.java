@@ -1,5 +1,5 @@
 package io.jhoffmann.formulari.model;
 
 public enum FieldType {
-    TEXT, NUMBER, DATE;
+    TEXT, NUMBER, DATE, YES_NO;
 }
