@@ -3,18 +3,19 @@ package io.jhoffmann.formulari.template;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 public class SingleTemplateResponseDto {
-    private String templateName;
+    private String name;
+    private String uid;
+    private String createdAt;
 
     @JsonUnwrapped
     private ComponentWrapper components;
-    
-   
-    public String getTemplateName() {
-        return templateName;
+
+    public String getName() {
+        return name;
     }
 
-    public void setTemplateName(String name) {
-        this.templateName = name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public ComponentWrapper getComponents() {
@@ -23,6 +24,22 @@ public class SingleTemplateResponseDto {
 
     public void setComponents(ComponentWrapper components) {
         this.components = components;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
     }
 
 }

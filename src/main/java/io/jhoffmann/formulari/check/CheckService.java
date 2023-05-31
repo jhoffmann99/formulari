@@ -43,11 +43,11 @@ public class CheckService {
         this.userService = userService;
     }
 
-    public CheckEntity createCheck(String name, TransmissionType transmissionType, String templateName,
+    public CheckEntity createCheck(String name, TransmissionType transmissionType, String templateUid,
             List<CheckRecipientDto> recipients, UserDetails userDetails) {
         validateCheck(transmissionType, recipients);
 
-        Optional<TemplateEntity> optTemplate = templateRepository.findByName(templateName);
+        Optional<TemplateEntity> optTemplate = templateRepository.findByUid(templateUid);
 
         if (optTemplate.isEmpty()) {
             throw new EntityNotFoundException("Could not find the template for the provided templateName");

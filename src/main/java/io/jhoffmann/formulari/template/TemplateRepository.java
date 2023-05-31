@@ -9,9 +9,11 @@ import org.springframework.data.repository.query.Param;
 
 
 public interface TemplateRepository extends JpaRepository<TemplateEntity, Long> {
-
-    Optional<TemplateEntity> findByName(String name);
     
     @Query("SELECT t FROM TemplateEntity t LEFT JOIN t.user u WHERE u.username = :username")
     List<TemplateEntity> findByUsername(@Param("username") String username);
+
+    Optional<TemplateEntity> findByUid(String uid);
+
+
 }

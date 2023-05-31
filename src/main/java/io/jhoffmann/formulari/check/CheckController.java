@@ -34,7 +34,7 @@ public class CheckController {
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     public void addCheck(@RequestBody CreateCheckRequestDto dto, Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        CheckEntity savedCheck = service.createCheck(dto.getName(), dto.getTransmissionType(), dto.getTemplateName(),
+        CheckEntity savedCheck = service.createCheck(dto.getName(), dto.getTransmissionType(), dto.getTemplateUid(),
                 dto.getRecipients(), userDetails);
 
         List<CheckRecipientEntity> checkRecipients = service.createCheckRecipients(savedCheck, dto.getRecipients());
@@ -55,7 +55,7 @@ public class CheckController {
 
         SingleTemplateResponseDto responseDto = new SingleTemplateResponseDto();
 
-        responseDto.setTemplateName(template.getName());
+        responseDto.setName(template.getName());
         responseDto.setComponents(template.getComponents());
 
         return ResponseEntity.ok(responseDto);
@@ -107,10 +107,10 @@ public class CheckController {
     @PostMapping("remind/{uid}")
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
     public void remind(@PathVariable String uid) {
-       
+
         Optional<CheckRecipientEntity> optCheckRecipient = service.findCheckRecipientByUid(uid);
 
-        if(optCheckRecipient.isEmpty()){
+        if (optCheckRecipient.isEmpty()) {
             throw new NotFoundException();
         }
 

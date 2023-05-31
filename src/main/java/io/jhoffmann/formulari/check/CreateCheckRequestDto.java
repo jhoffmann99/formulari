@@ -4,7 +4,7 @@ import java.util.List;
 
 public class CreateCheckRequestDto {
     private String name;
-    private String templateName;
+    private String templateUid;
     private TransmissionType transmissionType;
     private List<CheckRecipientDto> recipients;
    
@@ -14,12 +14,7 @@ public class CreateCheckRequestDto {
     public void setName(String name) {
         this.name = name;
     }
-    public String getTemplateName() {
-        return templateName;
-    }
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
-    }
+
     public TransmissionType getTransmissionType() {
         return transmissionType;
     }
@@ -31,6 +26,12 @@ public class CreateCheckRequestDto {
     }
     public void setRecipients(List<CheckRecipientDto> recipients) {
         this.recipients = recipients;
+    }
+    public String getTemplateUid() {
+        return templateUid;
+    }
+    public void setTemplateUid(String templateUid) {
+        this.templateUid = templateUid;
     }
 
     

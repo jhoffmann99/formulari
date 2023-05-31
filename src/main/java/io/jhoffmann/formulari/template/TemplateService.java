@@ -21,7 +21,8 @@ public class TemplateService {
         this.userService = userService;
     }
 
-    public TemplateEntity createTemplate(String templateName, List<? extends AbstractComponent> components, UserDetails userDetails) {
+    public TemplateEntity createTemplate(String templateName, List<? extends AbstractComponent> components,
+            UserDetails userDetails) {
         Optional<User> optUser = userService.findUserByUsername(userDetails.getUsername());
 
         if (optUser.isEmpty()) {
@@ -42,16 +43,28 @@ public class TemplateService {
         return repository.save(template);
     }
 
-    public Optional<TemplateEntity> findTemplateByName(String templateName) {
-        return repository.findByName(templateName);
+    public Optional<TemplateEntity> findTemplateByUid(String uid) {
+        return repository.findByUid(uid);
     }
 
     public List<String> findAll() {
         return repository.findAll().stream().map(TemplateEntity::getName).toList();
     }
 
-    public List<String> findAllByUser(UserDetails userDetails) {
-        return repository.findByUsername(userDetails.getUsername()).stream().map(TemplateEntity::getName).toList();
+    public List<TemplateEntity> findAllByUser(UserDetails userDetails) {
+        return repository.findByUsername(userDetails.getUsername());
+    }
+
+    public void deleteByUid(String uid, String username) {
+        Optional<TemplateEntity> optTemplate = repository.findByUid(uid);
+
+        if (optTemplate.isPresent()) {
+            TemplateEntity template = optTemplate.get();
+            if (template.getUser().getUsername().equals(username)) {
+                repository.delete(optTemplate.get());    
+            }
+            
+        }
     }
 
 }
