@@ -23,6 +23,10 @@ public class CheckEntity extends AbstractEntity {
     @JoinColumn(name = "template_id", nullable = false)
     private TemplateEntity template;
 
+    private String subject;
+
+    private String greeting;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -117,6 +121,22 @@ public class CheckEntity extends AbstractEntity {
         this.user = user;
     }
     
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getGreeting() {
+        return greeting;
+    }
+
+    public void setGreeting(String greeting) {
+        this.greeting = greeting;
+    }
 
     @PrePersist
     private void prePersist() {

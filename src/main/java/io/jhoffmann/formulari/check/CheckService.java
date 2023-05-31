@@ -44,7 +44,7 @@ public class CheckService {
     }
 
     public CheckEntity createCheck(String name, TransmissionType transmissionType, String templateUid,
-            List<CheckRecipientDto> recipients, UserDetails userDetails) {
+            List<CheckRecipientDto> recipients, String subject, String greeting, UserDetails userDetails) {
         validateCheck(transmissionType, recipients);
 
         Optional<TemplateEntity> optTemplate = templateRepository.findByUid(templateUid);
@@ -69,6 +69,8 @@ public class CheckService {
         check.setName(name);
         check.setTransmissionType(transmissionType);
         check.setExpectedReplies(recipients.size());
+        check.setSubject(subject);
+        check.setGreeting(greeting);
         check.setUser(user);
 
         final CheckEntity savedCheck = checkRepository.save(check);
@@ -287,6 +289,10 @@ public class CheckService {
         User user = optUser.get();
 
         return checkRecipientRepository.findArchivedReplies(user.getUsername());
+    }
+
+    public Optional<CheckEntity> findCheckById(Long checkId) {
+        return checkRepository.findById(checkId);
     }
 
 }

@@ -35,7 +35,7 @@ public class CheckController {
     public void addCheck(@RequestBody CreateCheckRequestDto dto, Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         CheckEntity savedCheck = service.createCheck(dto.getName(), dto.getTransmissionType(), dto.getTemplateUid(),
-                dto.getRecipients(), userDetails);
+                dto.getRecipients(), dto.getSubject(), dto.getGreeting(), userDetails);
 
         List<CheckRecipientEntity> checkRecipients = service.createCheckRecipients(savedCheck, dto.getRecipients());
 
@@ -117,5 +117,28 @@ public class CheckController {
         CheckRecipientEntity checkRecipient = optCheckRecipient.get();
 
         this.service.sendCheckReminder(checkRecipient);
+    }
+
+    @GetMapping("details/{checkId}")
+    public ResponseEntity<CheckDetailsResponseDto> getCheckDetails(@PathVariable String checkId) {
+        Optional<CheckRecipientEntity> optCheckRecipient = service.findCheckRecipientByUid(checkId);
+
+        if (optCheckRecipient.isEmpty()) {
+            throw new NotFoundException();
+        }
+
+        CheckRecipientEntity checkRecipient = optCheckRecipient.get();
+
+
+        CheckEntity check = checkRecipient.getCheck();
+
+      
+        CheckDetailsResponseDto response = new CheckDetailsResponseDto();
+
+        response.setCheckId(checkRecipient.getUid());
+        response.setGreeting(check.getGreeting());
+        response.setSubject(check.getSubject());
+
+        return ResponseEntity.ok(response);
     }
 }
