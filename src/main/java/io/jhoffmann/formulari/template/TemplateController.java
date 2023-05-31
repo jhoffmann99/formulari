@@ -34,7 +34,7 @@ public class TemplateController {
             Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        TemplateEntity template = templateService.createTemplate(dto.getTemplateName(),
+        TemplateEntity template = templateService.createTemplate(dto.getName(),
                 dto.getComponents().getComponents(), userDetails);
 
         SingleTemplateResponseDto responseDto = TemplateMapper.singleTemplateEntityToDto(template);
@@ -86,7 +86,5 @@ public class TemplateController {
             e.printStackTrace();
         }
 
-
-         
     }
 }

@@ -7,19 +7,18 @@ import jakarta.validation.constraints.NotBlank;
 
 public class CreateTemplateRequestDto {
     @NotBlank
-    private String templateName;
+    private String name;
 
     @Valid
     @JsonUnwrapped
     private ComponentWrapper components;
-    
-   
-    public String getTemplateName() {
-        return templateName;
+
+    public String getName() {
+        return name;
     }
 
-    public void setTemplateName(String name) {
-        this.templateName = name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public ComponentWrapper getComponents() {
@@ -30,9 +29,4 @@ public class CreateTemplateRequestDto {
         this.components = components;
     }
 
-    
-
-   
-
-    
 }
