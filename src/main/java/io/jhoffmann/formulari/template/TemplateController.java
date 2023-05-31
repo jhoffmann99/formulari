@@ -4,6 +4,8 @@ import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,10 +28,11 @@ public class TemplateController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<SingleTemplateResponseDto> createTemplate(@Valid @RequestBody CreateTemplateRequestDto dto) {
-
+    public ResponseEntity<SingleTemplateResponseDto> createTemplate(@Valid @RequestBody CreateTemplateRequestDto dto, Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        
         TemplateEntity template = templateService.createTemplate(dto.getTemplateName(),
-                dto.getComponents().getComponents());
+                dto.getComponents().getComponents(), userDetails);
 
         SingleTemplateResponseDto responseDto = TemplateMapper.singleTemplateEntityToDto(template);
 
@@ -50,11 +53,14 @@ public class TemplateController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @GetMapping
+    @GetMapping()
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
-    public ResponseEntity<AllTemplatesResponseDto> getAllTemplates() {
+    public ResponseEntity<AllTemplatesResponseDto> getAllTemplatesByUser(Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
         AllTemplatesResponseDto responseDto = new AllTemplatesResponseDto();
-        responseDto.setTemplates(templateService.findAll());
+
+        responseDto.setTemplates(templateService.findAllByUser(userDetails));
 
         return ResponseEntity.ok(responseDto);
     }

@@ -3,22 +3,36 @@ package io.jhoffmann.formulari.template;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import io.jhoffmann.formulari.auth.User;
+import io.jhoffmann.formulari.auth.UserService;
+import io.jhoffmann.formulari.exception.NotFoundException;
 import io.jhoffmann.formulari.model.AbstractComponent;
 
 @Service
 public class TemplateService {
     private final TemplateRepository repository;
+    private final UserService userService;
 
-    public TemplateService(TemplateRepository repository) {
+    public TemplateService(TemplateRepository repository, UserService userService) {
         this.repository = repository;
+        this.userService = userService;
     }
 
-    public TemplateEntity createTemplate(String templateName, List<? extends AbstractComponent> components) {
+    public TemplateEntity createTemplate(String templateName, List<? extends AbstractComponent> components, UserDetails userDetails) {
+        Optional<User> optUser = userService.findUserByUsername(userDetails.getUsername());
+
+        if (optUser.isEmpty()) {
+            throw new NotFoundException("User not found");
+        }
+
+        User user = optUser.get();
 
         TemplateEntity template = new TemplateEntity();
         template.setName(templateName);
+        template.setUser(user);
 
         ComponentWrapper components2 = new ComponentWrapper();
         components2.setComponents(components);
@@ -34,6 +48,10 @@ public class TemplateService {
 
     public List<String> findAll() {
         return repository.findAll().stream().map(TemplateEntity::getName).toList();
+    }
+
+    public List<String> findAllByUser(UserDetails userDetails) {
+        return repository.findByUsername(userDetails.getUsername()).stream().map(TemplateEntity::getName).toList();
     }
 
 }

@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import io.jhoffmann.formulari.auth.User;
+import io.jhoffmann.formulari.auth.UserService;
 import io.jhoffmann.formulari.email.Email;
 import io.jhoffmann.formulari.email.EmailService;
 import io.jhoffmann.formulari.exception.NotFoundException;
@@ -29,17 +32,19 @@ public class CheckService {
     private final CheckRecipientRepository checkRecipientRepository;
     private final TemplateRepository templateRepository;
     private final EmailService emailService;
+    private final UserService userService;
 
     public CheckService(CheckRepository checkRepository, CheckRecipientRepository checkRecipientRepository,
-            TemplateRepository templateRepository, EmailService emailService) {
+            TemplateRepository templateRepository, EmailService emailService, UserService userService) {
         this.checkRepository = checkRepository;
         this.checkRecipientRepository = checkRecipientRepository;
         this.templateRepository = templateRepository;
         this.emailService = emailService;
+        this.userService = userService;
     }
 
     public CheckEntity createCheck(String name, TransmissionType transmissionType, String templateName,
-            List<CheckRecipientDto> recipients) {
+            List<CheckRecipientDto> recipients, UserDetails userDetails) {
         validateCheck(transmissionType, recipients);
 
         Optional<TemplateEntity> optTemplate = templateRepository.findByName(templateName);
@@ -50,12 +55,21 @@ public class CheckService {
 
         TemplateEntity template = optTemplate.get();
 
+        Optional<User> optUser = userService.findUserByUsername(userDetails.getUsername());
+
+        if (optUser.isEmpty()) {
+            throw new NotFoundException("User not found");
+        }
+
+        User user = optUser.get();
+
         CheckEntity check = new CheckEntity();
 
         check.setTemplate(template);
         check.setName(name);
         check.setTransmissionType(transmissionType);
         check.setExpectedReplies(recipients.size());
+        check.setUser(user);
 
         final CheckEntity savedCheck = checkRepository.save(check);
 
@@ -136,6 +150,7 @@ public class CheckService {
         checkRecipientRepository.save(checkRecipient);
 
         check.increaseTotalReplies();
+
         checkRepository.save(check);
     }
 
@@ -238,12 +253,40 @@ public class CheckService {
         return template;
     }
 
-    public List<CheckRecipientEntity> getCheckReplies() {
-        return checkRecipientRepository.findReplies();
+    public List<CheckRecipientEntity> getCheckReplies(UserDetails userDetails) {
+        Optional<User> optUser = userService.findUserByUsername(userDetails.getUsername());
+
+        if (optUser.isEmpty()) {
+            throw new NotFoundException("User not found");
+        }
+
+        User user = optUser.get();
+
+        return checkRecipientRepository.findReplies(user.getUsername());
     }
 
-    public List<CheckRecipientEntity> getOpenCheckReplies() {
-        return checkRecipientRepository.findOpenReplies();
+    public List<CheckRecipientEntity> getOpenCheckReplies(UserDetails userDetails) {
+        Optional<User> optUser = userService.findUserByUsername(userDetails.getUsername());
+
+        if (optUser.isEmpty()) {
+            throw new NotFoundException("User not found");
+        }
+
+        User user = optUser.get();
+
+        return checkRecipientRepository.findOpenReplies(user.getUsername());
+    }
+
+    public List<CheckRecipientEntity> getArchivedCheckReplies(UserDetails userDetails) {
+        Optional<User> optUser = userService.findUserByUsername(userDetails.getUsername());
+
+        if (optUser.isEmpty()) {
+            throw new NotFoundException("User not found");
+        }
+
+        User user = optUser.get();
+
+        return checkRecipientRepository.findArchivedReplies(user.getUsername());
     }
 
 }

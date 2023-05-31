@@ -3,6 +3,7 @@ package io.jhoffmann.formulari.check;
 import java.time.LocalDateTime;
 
 import io.jhoffmann.formulari.AbstractEntity;
+import io.jhoffmann.formulari.auth.User;
 import io.jhoffmann.formulari.template.TemplateEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,6 +23,10 @@ public class CheckEntity extends AbstractEntity {
     @JoinColumn(name = "template_id", nullable = false)
     private TemplateEntity template;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @Enumerated(EnumType.STRING)
     private TransmissionType transmissionType;
 
@@ -29,6 +34,7 @@ public class CheckEntity extends AbstractEntity {
 
     private int totalReplies;
 
+    @Enumerated(EnumType.STRING)
     private CheckStatus status;
 
     private LocalDateTime createdAt;
@@ -103,6 +109,15 @@ public class CheckEntity extends AbstractEntity {
         this.totalReplies = totalReplies;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+    
+
     @PrePersist
     private void prePersist() {
         this.createdAt = LocalDateTime.now();
@@ -116,6 +131,9 @@ public class CheckEntity extends AbstractEntity {
 
     public void increaseTotalReplies() {
         totalReplies += 1;
+        if (totalReplies == expectedReplies) {
+            this.status = CheckStatus.ARCHIVED;
+        }
     }
 
 }

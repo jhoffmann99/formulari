@@ -4,8 +4,11 @@ import org.hibernate.annotations.Type;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import io.jhoffmann.formulari.AbstractEntity;
+import io.jhoffmann.formulari.auth.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,6 +20,10 @@ public class TemplateEntity extends AbstractEntity {
     @Column(name = "components", nullable = false, columnDefinition = "TEXT")
     @Type(JsonType.class)
     private ComponentWrapper components;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     public String getName() {
         return name;
@@ -33,5 +40,15 @@ public class TemplateEntity extends AbstractEntity {
     public void setComponents(ComponentWrapper components) {
         this.components = components;
     }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    
 
 }

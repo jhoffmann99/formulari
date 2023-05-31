@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.jhoffmann.formulari.exception.NotFoundException;
 import io.jhoffmann.formulari.template.SingleTemplateResponseDto;
 import io.jhoffmann.formulari.template.TemplateEntity;
+import jakarta.annotation.security.PermitAll;
 
 @RestController
 @RequestMapping("check")
@@ -29,9 +32,10 @@ public class CheckController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
-    public void addCheck(@RequestBody CreateCheckRequestDto dto) {
+    public void addCheck(@RequestBody CreateCheckRequestDto dto, Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         CheckEntity savedCheck = service.createCheck(dto.getName(), dto.getTransmissionType(), dto.getTemplateName(),
-                dto.getRecipients());
+                dto.getRecipients(), userDetails);
 
         List<CheckRecipientEntity> checkRecipients = service.createCheckRecipients(savedCheck, dto.getRecipients());
 
@@ -39,6 +43,7 @@ public class CheckController {
     }
 
     @PostMapping("reply")
+    @PermitAll
     public void answerCheck(@RequestBody CheckReplyRequestDto dto) {
         service.answerCheck(dto.getUid(), dto.getData());
     }
@@ -58,8 +63,11 @@ public class CheckController {
     }
 
     @GetMapping("inbox")
-    public ResponseEntity<CheckRecipientsResponseDto> getCheckInbox() {
-        List<CheckRecipientEntity> checkRecipients = service.getCheckReplies();
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<CheckRecipientsResponseDto> getCheckInbox(Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        List<CheckRecipientEntity> checkRecipients = service.getCheckReplies(userDetails);
 
         CheckRecipientsResponseDto response = new CheckRecipientsResponseDto();
 
@@ -69,8 +77,25 @@ public class CheckController {
     }
 
     @GetMapping("outbox")
-    public ResponseEntity<CheckRecipientsResponseDto> getCheckOutbox() {
-        List<CheckRecipientEntity> checkRecipients = service.getOpenCheckReplies();
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<CheckRecipientsResponseDto> getCheckOutbox(Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        List<CheckRecipientEntity> checkRecipients = service.getOpenCheckReplies(userDetails);
+
+        CheckRecipientsResponseDto response = new CheckRecipientsResponseDto();
+
+        response.setRecipients(checkRecipients);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("archive")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<CheckRecipientsResponseDto> getCheckArchived(Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        List<CheckRecipientEntity> checkRecipients = service.getArchivedCheckReplies(userDetails);
 
         CheckRecipientsResponseDto response = new CheckRecipientsResponseDto();
 
