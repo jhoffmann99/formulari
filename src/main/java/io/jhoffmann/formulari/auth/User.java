@@ -1,20 +1,21 @@
 package io.jhoffmann.formulari.auth;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
+import io.jhoffmann.formulari.subscription.SubscriptionEntity;
+import io.jhoffmann.formulari.subscription.SubscriptionStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-
 @Entity
-@Table(name = "users",
-       uniqueConstraints = {
-           @UniqueConstraint(columnNames = "username"),
-           @UniqueConstraint(columnNames = "email")
-       })
+@Table(name = "users", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "username"),
+    @UniqueConstraint(columnNames = "email")
+})
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +37,9 @@ public class User {
   @Enumerated(EnumType.STRING)
   @ElementCollection(fetch = FetchType.EAGER)
   private Set<Role> roles = new HashSet<>();
+
+  @OneToMany
+  private Set<SubscriptionEntity> subscriptions = new HashSet<>();
 
   public User() {
   }
@@ -81,13 +85,29 @@ public class User {
 
   public Set<Role> getRoles() {
     return roles;
-}
+  }
 
-public void setRoles(Set<Role> roles) {
+  public void setRoles(Set<Role> roles) {
     this.roles = roles;
-}
+  }
 
-public void addRolle(Role role) {
+  public void addRolle(Role role) {
     roles.add(role);
-}
+  }
+
+  public Set<SubscriptionEntity> getSubscriptions() {
+    return subscriptions;
+  }
+
+  public void setSubscriptions(Set<SubscriptionEntity> subscriptions) {
+    this.subscriptions = subscriptions;
+  }
+
+  public void addSubscription(SubscriptionEntity subscription) {
+    this.subscriptions.add(subscription);
+  }
+
+  public Optional<SubscriptionEntity> getActiveSubscription() {
+    return this.subscriptions.stream().filter(subscription -> subscription.getStatus() == SubscriptionStatus.ACTIVE).findFirst();
+  }
 }
