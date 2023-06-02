@@ -61,7 +61,9 @@ public class TemplateService {
         if (optTemplate.isPresent()) {
             TemplateEntity template = optTemplate.get();
             if (template.getUser().getUsername().equals(username)) {
-                repository.delete(optTemplate.get());    
+                template.setStatus(TemplateStatus.ARCHIVED);
+
+                repository.save(template);
             }
             
         }

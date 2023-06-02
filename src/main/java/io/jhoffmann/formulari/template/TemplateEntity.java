@@ -10,6 +10,8 @@ import io.jhoffmann.formulari.AbstractEntity;
 import io.jhoffmann.formulari.auth.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
@@ -22,6 +24,9 @@ public class TemplateEntity extends AbstractEntity {
     private String name;
 
     private String uid;
+
+    @Enumerated(EnumType.STRING)
+    private TemplateStatus status;
 
     @Column(name = "components", nullable = false, columnDefinition = "TEXT")
     @Type(JsonType.class)
@@ -70,6 +75,7 @@ public class TemplateEntity extends AbstractEntity {
     private void prePersist() {
         this.uid = UUID.randomUUID().toString();
         this.createdAt = LocalDateTime.now().toString();
+        this.status = TemplateStatus.ACTIVE;
     }
 
     public String getCreatedAt() {
@@ -78,6 +84,14 @@ public class TemplateEntity extends AbstractEntity {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public TemplateStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TemplateStatus status) {
+        this.status = status;
     }
 
     
