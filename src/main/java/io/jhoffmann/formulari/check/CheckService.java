@@ -184,8 +184,8 @@ public class CheckService {
     }
 
     private void validateYesNoFieldValue(Object value) {
-        if (!(value instanceof Boolean)) {
-            throw new ValidationException("provided value is not of type Boolean");
+        if (!(value instanceof String || value.equals("ja") || value.equals("nein")) ) {
+            throw new ValidationException("provided value is not valid");
         }
     }
 

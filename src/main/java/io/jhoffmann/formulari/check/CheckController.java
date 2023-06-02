@@ -3,6 +3,7 @@ package io.jhoffmann.formulari.check;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -128,6 +129,10 @@ public class CheckController {
         }
 
         CheckRecipientEntity checkRecipient = optCheckRecipient.get();
+
+        if (checkRecipient.isCompleted()) {
+            return ResponseEntity.badRequest().build();
+        }
 
 
         CheckEntity check = checkRecipient.getCheck();
