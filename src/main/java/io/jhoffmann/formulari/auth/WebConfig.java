@@ -24,7 +24,7 @@ public class WebConfig implements Filter,WebMvcConfigurer
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:4200", "https://formulari-frontend.herokuapp.com");
+                registry.addMapping("/**");
             }
         };
     }
