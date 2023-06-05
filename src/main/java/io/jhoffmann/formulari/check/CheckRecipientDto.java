@@ -1,16 +1,19 @@
 package io.jhoffmann.formulari.check;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
 public class CheckRecipientDto {
-    @NotBlank
     private String firstName;
     
     @NotBlank
     private String lastName;
 
+    @NotBlank
     private Salutation salutation;
     
+    @NotBlank
+    @Email
     private String email;
     
     private String mobilePhone;
@@ -47,8 +50,5 @@ public class CheckRecipientDto {
     public void setSalutation(Salutation salutation) {
         this.salutation = salutation;
     }
-    
-    
-
     
 }

@@ -4,6 +4,12 @@ public class CheckDetailsResponseDto {
     private String checkId;
     private String subject;
     private String greeting;
+
+    private Salutation salutation;
+    private String firstName;
+    private String lastName;
+    
+
     public String getCheckId() {
         return checkId;
     }
@@ -21,6 +27,24 @@ public class CheckDetailsResponseDto {
     }
     public void setGreeting(String greeting) {
         this.greeting = greeting;
+    }
+    public Salutation getSalutation() {
+        return salutation;
+    }
+    public void setSalutation(Salutation salutation) {
+        this.salutation = salutation;
+    }
+    public String getFirstName() {
+        return firstName;
+    }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    public String getLastName() {
+        return lastName;
+    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     

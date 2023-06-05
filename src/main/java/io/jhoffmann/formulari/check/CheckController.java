@@ -143,6 +143,9 @@ public class CheckController {
         response.setCheckId(checkRecipient.getUid());
         response.setGreeting(check.getGreeting());
         response.setSubject(check.getSubject());
+        response.setFirstName(checkRecipient.getFirstName());
+        response.setLastName(checkRecipient.getLastName());
+        response.setSalutation(checkRecipient.getSalutation());
 
         return ResponseEntity.ok(response);
     }
