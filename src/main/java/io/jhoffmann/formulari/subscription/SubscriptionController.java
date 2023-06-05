@@ -8,6 +8,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +21,16 @@ public class SubscriptionController {
 
     public SubscriptionController(SubscriptionService subscriptionService) {
         this.subscriptionService = subscriptionService;
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_MODERATOR') or hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> addSubscription(@RequestBody SubscriptionRequestDto data, Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        subscriptionService.addSubscription(data, userDetails);
+
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
@@ -35,8 +47,8 @@ public class SubscriptionController {
         SubscriptionEntity subscription = optSubscription.get();
 
         SubscriptionResponseDto response = new SubscriptionResponseDto();
-        response.setPlan(subscription.getPlan());
-        response.setActivatedAt("");
+      
+        response.setActivatedAt(subscription.getActivatedAt());
         response.setStatus(subscription.getStatus());
 
         return ResponseEntity.ok(response);

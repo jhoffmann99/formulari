@@ -15,4 +15,8 @@ public class UserService {
     public Optional<User> findUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+    public void updateUser(User user) {
+        userRepository.save(user);
+    }
 }

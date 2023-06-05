@@ -3,6 +3,8 @@ package io.jhoffmann.formulari.subscription;
 
 import java.util.Optional;
 
+import javax.swing.RepaintManager;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,26 @@ public class SubscriptionService {
         User user = optUser.get();
 
         return subscriptionRepository.findActiveSubscription(user);
+    }
+
+    public void addSubscription(SubscriptionRequestDto data, UserDetails userDetails) {
+        Optional<User> optUser = userService.findUserByUsername(userDetails.getUsername());
+        
+        if (optUser.isEmpty()) {
+            throw new NotFoundException("User not found");
+        }
+
+        User user = optUser.get();
+
+        SubscriptionEntity subscription = new SubscriptionEntity();
+        subscription.setActivatedAt(data.getStartTime());
+        subscription.setPaypalSubscriptionid(data.getId());
+        subscription.setStatus(data.getStatus());
+
+        subscription.setUser(user);
+        
+        subscriptionRepository.save(subscription);
+
     }
 
 

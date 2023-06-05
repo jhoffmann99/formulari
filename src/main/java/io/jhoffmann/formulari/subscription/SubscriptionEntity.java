@@ -17,11 +17,9 @@ import jakarta.persistence.Table;
 public class SubscriptionEntity extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private SubscriptionStatus status;
-    private LocalDateTime activatedAt;
-    private LocalDateTime canceledAt;
-
-    @ManyToOne
-    private SubscriptionPlanEntity plan;
+    private String paypalSubscriptionid;
+    private String activatedAt;
+    private String canceledAt;
 
     @ManyToOne
     private User user;
@@ -32,16 +30,17 @@ public class SubscriptionEntity extends AbstractEntity {
     public void setStatus(SubscriptionStatus status) {
         this.status = status;
     }
-    public LocalDateTime getActivatedAt() {
+    
+    public String getActivatedAt() {
         return activatedAt;
     }
-    public void setActivatedAt(LocalDateTime activatedAt) {
+    public void setActivatedAt(String activatedAt) {
         this.activatedAt = activatedAt;
     }
-    public LocalDateTime getCanceledAt() {
+    public String getCanceledAt() {
         return canceledAt;
     }
-    public void setCanceledAt(LocalDateTime canceledAt) {
+    public void setCanceledAt(String canceledAt) {
         this.canceledAt = canceledAt;
     }
     public User getUser() {
@@ -50,11 +49,11 @@ public class SubscriptionEntity extends AbstractEntity {
     public void setUser(User user) {
         this.user = user;
     }
-    public SubscriptionPlanEntity getPlan() {
-        return plan;
+    public String getPaypalSubscriptionid() {
+        return paypalSubscriptionid;
     }
-    public void setPlan(SubscriptionPlanEntity plan) {
-        this.plan = plan;
+    public void setPaypalSubscriptionid(String paypalSubscriptionid) {
+        this.paypalSubscriptionid = paypalSubscriptionid;
     }
 
     

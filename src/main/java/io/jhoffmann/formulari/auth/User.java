@@ -38,7 +38,7 @@ public class User {
   @ElementCollection(fetch = FetchType.EAGER)
   private Set<Role> roles = new HashSet<>();
 
-  @OneToMany
+  @OneToMany(mappedBy = "user")
   private Set<SubscriptionEntity> subscriptions = new HashSet<>();
 
   public User() {
