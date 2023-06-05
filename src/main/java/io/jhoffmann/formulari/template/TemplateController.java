@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = { "http://localhost:4200", "http://localhost:8080", "https://formulari-frontend.herokuapp.com" }, maxAge = 3600, allowCredentials = "true")
+@CrossOrigin(origins = { "http://localhost:4200", "http://localhost:8080", "https://formulari-frontend.herokuapp.com" },exposedHeaders = {"Access-Control-Allow-Origin","Access-Control-Allow-Credentials"}, maxAge = 3600, allowCredentials = "true")
 @RequestMapping("template")
 public class TemplateController {
     private final TemplateService templateService;
