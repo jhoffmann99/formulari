@@ -38,7 +38,7 @@ public class SecurityConfiguration {
         http.cors().and().csrf().disable()
         .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-        .authorizeRequests().requestMatchers("/api/auth/**", "/check/template/**", "check/details/**", "/check/reply/**").permitAll()
+        .authorizeRequests().requestMatchers("api/auth/**","api/auth/**", "/check/template/**", "check/details/**", "/check/reply/**").permitAll()
         .anyRequest().authenticated();
     
  // fix H2 database console: Refused to display ' in a frame because it set 'X-Frame-Options' to 'deny'
