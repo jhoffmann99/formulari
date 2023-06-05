@@ -19,3 +19,4 @@ app:
   jwtCookieName: formulari
   jwtSecret: OQRx6zRwJGYeH1ErSc9D9rmW74pHEoig1xIK8frN8QJOy850nK2AWMu3Ei3kdDL
   jwtExpirationMs: 86400000
+logging.level.org.springframework: TRACE
