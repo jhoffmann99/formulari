@@ -16,7 +16,7 @@ public class WebConfig implements WebMvcConfigurer
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**").allowedOrigins("http://localhost:4200",
-                        "https://formulari-frontend.herokuapp.com").exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials");
+                        "https://formulari-frontend.herokuapp.com").exposedHeaders("Access-Control-Allow-Origin","Access-Control-Allow-Credentials").allowCredentials(true);
             }
         };
     }
