@@ -2,14 +2,14 @@ server:
   port: 3000
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:3001/postgres
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:3001/postgres}
     driverClassName: org.postgresql.Driver
-    username: root
-    password: root
+    username: ${JDBC_DATABASE_USERNAME:root}
+    password: ${JDBC_DATABASE_PASSWORD:root}
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${JPA_GENERATE_DDL:update}
 email:
   api-key: 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
   sender-email: no-reply@formulari.io
