@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("subscription")
-@CrossOrigin(origins = { "http://localhost:4200", "https://formulari-frontend.herokuapp.com" }, maxAge = 3600, allowCredentials = "true")
 public class SubscriptionController {
     private final SubscriptionService subscriptionService;
 

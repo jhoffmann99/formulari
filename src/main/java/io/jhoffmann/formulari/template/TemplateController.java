@@ -20,7 +20,6 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("template")
-@CrossOrigin(origins = { "http://localhost:4200", "https://formulari-frontend.herokuapp.com" }, maxAge = 3600, allowCredentials = "true")
 public class TemplateController {
     private final TemplateService templateService;
 
