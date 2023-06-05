@@ -3,7 +3,6 @@ package io.jhoffmann.formulari.check;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -22,6 +21,7 @@ import io.jhoffmann.formulari.template.TemplateEntity;
 import jakarta.annotation.security.PermitAll;
 
 @RestController
+@CrossOrigin(origins = { "http://localhost:4200", "http://localhost:8080", "https://formulari-frontend.herokuapp.com" }, maxAge = 3600, allowCredentials = "true")
 @RequestMapping("check")
 public class CheckController {
     private final CheckService service;
