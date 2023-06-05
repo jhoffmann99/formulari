@@ -23,7 +23,7 @@ import jakarta.annotation.security.PermitAll;
 
 @RestController
 @RequestMapping("check")
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600, allowCredentials = "true")
+@CrossOrigin(origins = { "http://localhost:4200", "https://formulari-frontend.herokuapp.com" }, maxAge = 3600, allowCredentials = "true")
 public class CheckController {
     private final CheckService service;
 
