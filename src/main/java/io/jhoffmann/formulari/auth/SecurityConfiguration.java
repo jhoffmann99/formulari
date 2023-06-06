@@ -40,12 +40,12 @@ public class SecurityConfiguration {
     }
 
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().requestMatchers("/api/auth/signin", "/api/auth/signup");
+        web.ignoring().requestMatchers("/api/auth/signin", "/api/auth/signup", "/check/reply/**");
     }
 
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().ignoringRequestMatchers("/api/auth/signin", "/api/auth/signup").disable()
+        http.cors().and().csrf().ignoringRequestMatchers("/api/auth/signin", "/api/auth/signup", "/check/reply/**").disable()
                 .authorizeRequests()
                 .requestMatchers("/api/auth/signin", "/api/auth/signup", "/api/check/template/**",
                         "/api/check/details/**",
