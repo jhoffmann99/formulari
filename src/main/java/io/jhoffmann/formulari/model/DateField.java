@@ -1,6 +1,5 @@
 package io.jhoffmann.formulari.model;
 
-
 public class DateField extends AbstractComponent {
     private FieldType fieldType = FieldType.DATE;
 
@@ -12,5 +11,4 @@ public class DateField extends AbstractComponent {
         this.fieldType = fieldType;
     }
 
-    
 }

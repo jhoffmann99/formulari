@@ -11,12 +11,13 @@ spring:
     hibernate:
       ddl-auto: ${JPA_GENERATE_DDL:update}
 email:
-  api-key: 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
+  api-key: ${BREVO_API_KEY}
   sender-email: no-reply@formulari.io
   sender-name: Formulari
 # App Properties
 app:
   jwtCookieName: formulari
-  jwtSecret: OQRx6zRwJGYeH1ErSc9D9rmW74pHEoig1xIK8frN8QJOy850nK2AWMu3Ei3kdDL
+  jwtSecret: ${JWT_SECRET}
+  # 1h = 60 * 60 * 1000
   jwtExpirationMs: 3600000
 logging.level.org.springframework: WARN

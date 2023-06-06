@@ -3,7 +3,6 @@ package io.jhoffmann.formulari.template;
 import java.io.Serializable;
 import java.util.List;
 
-
 public class AllTemplatesResponseDto implements Serializable {
     private List<SingleTemplateResponseDto> templates;
 
@@ -15,5 +14,4 @@ public class AllTemplatesResponseDto implements Serializable {
         this.templates = templates;
     }
 
-    
 }

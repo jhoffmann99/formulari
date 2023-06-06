@@ -28,34 +28,39 @@ public abstract class AbstractComponent {
 
     private String hint;
 
-
     public AbstractComponent() {
     }
-    
+
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
-   
+
     public boolean isRequired() {
         return required;
     }
+
     public void setRequired(boolean required) {
         this.required = required;
     }
+
     public String getDescription() {
         return description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
+
     public String getHint() {
         return hint;
     }
+
     public void setHint(String hint) {
         this.hint = hint;
     }
-    
+
 }

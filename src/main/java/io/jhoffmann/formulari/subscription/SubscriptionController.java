@@ -45,7 +45,7 @@ public class SubscriptionController {
         SubscriptionEntity subscription = optSubscription.get();
 
         SubscriptionResponseDto response = new SubscriptionResponseDto();
-      
+
         response.setActivatedAt(subscription.getActivatedAt());
         response.setStatus(subscription.getStatus());
 

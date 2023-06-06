@@ -11,7 +11,7 @@ public class MultipleChoiceField extends AbstractComponent {
     private int minOptions;
     @JsonProperty("maxOptions")
     private int maxOptions;
-    
+
     @ChoiceOptions
     private String options;
 
@@ -22,7 +22,6 @@ public class MultipleChoiceField extends AbstractComponent {
     public void setOptions(String options) {
         this.options = options;
     }
-
 
     public FieldType getFieldType() {
         return fieldType;
@@ -48,5 +47,4 @@ public class MultipleChoiceField extends AbstractComponent {
         this.maxOptions = maxOptions;
     }
 
-    
 }

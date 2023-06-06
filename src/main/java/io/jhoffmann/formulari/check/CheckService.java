@@ -218,7 +218,7 @@ public class CheckService {
         Email email = new Email();
         email.setRecipients(List.of(checkRecipient.getEmail()));
         email.setSubject("formulari Check");
-        email.setTextPlain("https://formulari-frontend.herokuapp.com/check/reply/" +checkRecipient.getUid());
+        email.setTextPlain("https://formulari-frontend.herokuapp.com/check/reply/" + checkRecipient.getUid());
 
         System.out.println(checkRecipient.getUid());
         emailService.sendEmail(email);

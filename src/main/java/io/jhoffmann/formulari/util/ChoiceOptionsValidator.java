@@ -12,7 +12,7 @@ public class ChoiceOptionsValidator implements ConstraintValidator<ChoiceOptions
         }
 
         try {
-            value.split(value);
+            value.split(";");
 
             return true;
         }catch(Exception e){

@@ -4,7 +4,7 @@ import io.jhoffmann.formulari.util.ChoiceOptions;
 
 public class SingleChoiceField extends AbstractComponent {
     private FieldType fieldType = FieldType.SINGLE_CHOICE;
-    
+
     @ChoiceOptions
     private String options;
 
@@ -15,7 +15,6 @@ public class SingleChoiceField extends AbstractComponent {
     public void setOptions(String options) {
         this.options = options;
     }
-
 
     public FieldType getFieldType() {
         return fieldType;

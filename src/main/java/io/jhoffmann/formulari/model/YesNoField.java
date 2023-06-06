@@ -1,6 +1,6 @@
 package io.jhoffmann.formulari.model;
 
-public class YesNoField  extends AbstractComponent {
+public class YesNoField extends AbstractComponent {
     private FieldType fieldType = FieldType.YES_NO;
 
     public FieldType getFieldType() {
@@ -11,5 +11,4 @@ public class YesNoField  extends AbstractComponent {
         this.fieldType = fieldType;
     }
 
-    
 }

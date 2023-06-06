@@ -38,7 +38,6 @@ public class TemplateEntity extends AbstractEntity {
 
     private String createdAt;
 
-    
     public String getName() {
         return name;
     }
@@ -93,7 +92,5 @@ public class TemplateEntity extends AbstractEntity {
     public void setStatus(TemplateStatus status) {
         this.status = status;
     }
-
-    
 
 }

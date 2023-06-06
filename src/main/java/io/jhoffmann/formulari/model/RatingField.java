@@ -4,7 +4,7 @@ public class RatingField extends AbstractComponent {
     private FieldType fieldType = FieldType.RATING;
     private int max;
     private double step;
-    
+
     public FieldType getFieldType() {
         return fieldType;
     }
@@ -27,7 +27,6 @@ public class RatingField extends AbstractComponent {
 
     public void setStep(double step) {
         this.step = step;
-    }    
-    
-    
+    }
+
 }
