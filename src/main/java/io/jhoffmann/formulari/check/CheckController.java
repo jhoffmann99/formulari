@@ -42,7 +42,6 @@ public class CheckController {
     }
 
     @PostMapping("reply")
-    @PermitAll
     public void answerCheck(@RequestBody CheckReplyRequestDto dto) {
         service.answerCheck(dto.getUid(), dto.getData());
     }

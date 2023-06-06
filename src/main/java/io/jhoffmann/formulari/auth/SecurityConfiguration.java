@@ -39,9 +39,9 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().requestMatchers("/api/auth/signin", "/api/auth/signup", "/check/reply/**");
-    }
+/*     public void configure(WebSecurity web) throws Exception {
+        web.ignoring().requestMatchers("/api/auth/signin", "/api/auth/signup", "/check/reply/**","/api/check/details/**");
+    } */
 
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
