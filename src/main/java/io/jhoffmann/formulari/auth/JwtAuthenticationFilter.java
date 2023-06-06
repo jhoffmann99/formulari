@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class AuthTokenFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
   @Autowired
   private JwtUtils jwtUtils;
 
@@ -29,23 +29,18 @@ public class AuthTokenFilter extends OncePerRequestFilter {
   @Autowired
   private UserService userService;
 
-  private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
+  private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
-System.out.println("ASDFASDF");
     String header = request.getHeader("Authorization");
 
     if (header == null || !header.startsWith("HTTP_TOKEN")) {
-      //throw new JwtTokenMissingException("No JWT token found in the request headers");
-      filterChain.doFilter(request, response);
-      return;
+      throw new JwtTokenMissingException("No JWT token found in the request headers");
     }
 
     String token = header.substring("HTTP_TOKEN".length() + 1);
-
-    System.out.println(token);
 
     jwtUtils.validateJwtToken(token);
 
@@ -66,6 +61,13 @@ System.out.println("ASDFASDF");
 
     filterChain.doFilter(request, response);
 
+  }
+
+  @Override
+  protected boolean shouldNotFilter(HttpServletRequest request)
+      throws ServletException {
+    String path = request.getRequestURI();
+    return "/api/auth/signin".equals(path) || "/api/auth/signup".equals(path);
   }
 
 }

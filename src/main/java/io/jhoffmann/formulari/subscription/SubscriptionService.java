@@ -22,7 +22,7 @@ public class SubscriptionService {
     }
 
     public Optional<SubscriptionEntity> getActiveSubscription(UserDetails userDetails) {
-        Optional<User> optUser = userService.findUserBySub(userDetails.getUsername());
+        Optional<User> optUser = userService.findUserByEmail(userDetails.getUsername());
 
         if (optUser.isEmpty()) {
             throw new NotFoundException("User not found");
@@ -34,7 +34,7 @@ public class SubscriptionService {
     }
 
     public void addSubscription(SubscriptionRequestDto data, UserDetails userDetails) {
-        Optional<User> optUser = userService.findUserBySub(userDetails.getUsername());
+        Optional<User> optUser = userService.findUserByEmail(userDetails.getUsername());
 
         if (optUser.isEmpty()) {
             throw new NotFoundException("User not found");

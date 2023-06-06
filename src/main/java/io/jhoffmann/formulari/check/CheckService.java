@@ -55,7 +55,7 @@ public class CheckService {
 
         TemplateEntity template = optTemplate.get();
 
-        Optional<User> optUser = userService.findUserBySub(userDetails.getUsername());
+        Optional<User> optUser = userService.findUserByEmail(userDetails.getUsername());
 
         if (optUser.isEmpty()) {
             throw new NotFoundException("User not found");
@@ -253,7 +253,7 @@ public class CheckService {
     }
 
     public List<CheckRecipientEntity> getCheckReplies(UserDetails userDetails) {
-        Optional<User> optUser = userService.findUserBySub(userDetails.getUsername());
+        Optional<User> optUser = userService.findUserByEmail(userDetails.getUsername());
 
         if (optUser.isEmpty()) {
             throw new NotFoundException("User not found");
@@ -265,7 +265,7 @@ public class CheckService {
     }
 
     public List<CheckRecipientEntity> getOpenCheckReplies(UserDetails userDetails) {
-        Optional<User> optUser = userService.findUserBySub(userDetails.getUsername());
+        Optional<User> optUser = userService.findUserByEmail(userDetails.getUsername());
 
         if (optUser.isEmpty()) {
             throw new NotFoundException("User not found");
@@ -277,7 +277,7 @@ public class CheckService {
     }
 
     public List<CheckRecipientEntity> getArchivedCheckReplies(UserDetails userDetails) {
-        Optional<User> optUser = userService.findUserBySub(userDetails.getUsername());
+        Optional<User> optUser = userService.findUserByEmail(userDetails.getUsername());
 
         if (optUser.isEmpty()) {
             throw new NotFoundException("User not found");

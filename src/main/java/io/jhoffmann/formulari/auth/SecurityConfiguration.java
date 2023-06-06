@@ -31,30 +31,34 @@ public class SecurityConfiguration {
     @Autowired
     private AuthEntryPointJwt unauthorizedHandler;
 
+    @Autowired
+	private JwtAuthenticationFilter jwtAuthenticationFilter;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     public void configure(WebSecurity web) throws Exception {
-		web.ignoring().requestMatchers("/api/auth/signin", "/api/auth/signup");
-	}
+        web.ignoring().requestMatchers("/api/auth/signin", "/api/auth/signup");
+    }
 
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().ignoringRequestMatchers("/api/auth/**").disable()
+        http.cors().and().csrf().ignoringRequestMatchers("/api/auth/signin", "/api/auth/signup").disable()
                 .authorizeRequests()
-                .requestMatchers("/api/auth/signin", "/api/auth/signup", "/api/check/template/**", "/api/check/details/**",
+                .requestMatchers("/api/auth/signin", "/api/auth/signup", "/api/check/template/**",
+                        "/api/check/details/**",
                         "/api/check/reply/**")
                 .permitAll()
                 .anyRequest().authenticated().and()
-        .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    
 
-    //http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
-    
-    return http.build();
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        // UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
     @Bean
@@ -73,11 +77,11 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public RegistrationBean  jwtAuthFilterRegister() {
-        FilterRegistrationBean<AuthTokenFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new AuthTokenFilter());
-		registrationBean.setEnabled(false);
-		return registrationBean;
+    public RegistrationBean jwtAuthFilterRegister(JwtAuthenticationFilter filter) {
+        FilterRegistrationBean<JwtAuthenticationFilter> registrationBean = new FilterRegistrationBean<>(filter);
+        
+        registrationBean.setEnabled(false);
+        return registrationBean;
     }
 
 }
