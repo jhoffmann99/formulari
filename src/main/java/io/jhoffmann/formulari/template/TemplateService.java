@@ -60,7 +60,7 @@ public class TemplateService {
 
         if (optTemplate.isPresent()) {
             TemplateEntity template = optTemplate.get();
-            if (template.getUser().getSub().equals(username)) {
+            if (template.getUser().getEmail().equals(username)) {
                 template.setStatus(TemplateStatus.ARCHIVED);
 
                 repository.save(template);
