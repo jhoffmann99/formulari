@@ -10,7 +10,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,13 +38,9 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-/*     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().requestMatchers("/api/auth/signin", "/api/auth/signup", "/check/reply/**","/api/check/details/**");
-    } */
-
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().ignoringRequestMatchers("/api/auth/signin", "/api/auth/signup", "/check/reply/**").disable()
+        http.cors().and().csrf().disable()
                 .authorizeRequests()
                 .requestMatchers("/api/auth/signin", "/api/auth/signup", "/api/check/template/**",
                         "/api/check/details/**",
@@ -56,7 +51,6 @@ public class SecurityConfiguration {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        // UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
