@@ -23,7 +23,7 @@ public class TemplateService {
 
     public TemplateEntity createTemplate(String templateName, List<? extends AbstractComponent> components,
             UserDetails userDetails) {
-        Optional<User> optUser = userService.findUserByUsername(userDetails.getUsername());
+        Optional<User> optUser = userService.findUserBySub(userDetails.getUsername());
 
         if (optUser.isEmpty()) {
             throw new NotFoundException("User not found");
@@ -52,7 +52,7 @@ public class TemplateService {
     }
 
     public List<TemplateEntity> findAllByUser(UserDetails userDetails) {
-        return repository.findByUsername(userDetails.getUsername());
+        return repository.findBySub(userDetails.getUsername());
     }
 
     public void deleteByUid(String uid, String username) {
@@ -60,12 +60,12 @@ public class TemplateService {
 
         if (optTemplate.isPresent()) {
             TemplateEntity template = optTemplate.get();
-            if (template.getUser().getUsername().equals(username)) {
+            if (template.getUser().getSub().equals(username)) {
                 template.setStatus(TemplateStatus.ARCHIVED);
 
                 repository.save(template);
             }
-            
+
         }
     }
 

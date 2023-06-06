@@ -9,7 +9,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: ${JPA_GENERATE_DDL:create}
+      ddl-auto: ${JPA_GENERATE_DDL:update}
 email:
   api-key: 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
   sender-email: no-reply@formulari.io
@@ -18,5 +18,5 @@ email:
 app:
   jwtCookieName: formulari
   jwtSecret: OQRx6zRwJGYeH1ErSc9D9rmW74pHEoig1xIK8frN8QJOy850nK2AWMu3Ei3kdDL
-  jwtExpirationMs: 86400000
-logging.level.org.springframework: TRACE
+  jwtExpirationMs: 180000
+logging.level.org.springframework: INFO

@@ -1,6 +1,5 @@
 package io.jhoffmann.formulari.subscription;
 
-
 import java.util.Optional;
 
 import javax.swing.RepaintManager;
@@ -23,8 +22,8 @@ public class SubscriptionService {
     }
 
     public Optional<SubscriptionEntity> getActiveSubscription(UserDetails userDetails) {
-        Optional<User> optUser = userService.findUserByUsername(userDetails.getUsername());
-        
+        Optional<User> optUser = userService.findUserBySub(userDetails.getUsername());
+
         if (optUser.isEmpty()) {
             throw new NotFoundException("User not found");
         }
@@ -35,8 +34,8 @@ public class SubscriptionService {
     }
 
     public void addSubscription(SubscriptionRequestDto data, UserDetails userDetails) {
-        Optional<User> optUser = userService.findUserByUsername(userDetails.getUsername());
-        
+        Optional<User> optUser = userService.findUserBySub(userDetails.getUsername());
+
         if (optUser.isEmpty()) {
             throw new NotFoundException("User not found");
         }
@@ -49,10 +48,9 @@ public class SubscriptionService {
         subscription.setStatus(data.getStatus());
 
         subscription.setUser(user);
-        
+
         subscriptionRepository.save(subscription);
 
     }
-
 
 }

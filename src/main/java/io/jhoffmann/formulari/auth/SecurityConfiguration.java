@@ -1,6 +1,8 @@
 package io.jhoffmann.formulari.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.RegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,6 +10,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,9 +21,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @Configuration
 @EnableGlobalMethodSecurity(
-    // securedEnabled = true,
-    // jsr250Enabled = true,
-    prePostEnabled = true)
+        // securedEnabled = true,
+        // jsr250Enabled = true,
+        prePostEnabled = true)
 public class SecurityConfiguration {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -33,20 +36,23 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+    public void configure(WebSecurity web) throws Exception {
+		web.ignoring().requestMatchers("/api/auth/signin", "/api/auth/signup");
+	}
+
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
+        http.cors().and().csrf().ignoringRequestMatchers("/api/auth/**").disable()
+                .authorizeRequests()
+                .requestMatchers("/api/auth/signin", "/api/auth/signup", "/api/check/template/**", "/api/check/details/**",
+                        "/api/check/reply/**")
+                .permitAll()
+                .anyRequest().authenticated().and()
         .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-        .authorizeRequests().requestMatchers("/api/auth/**", "/api/check/template/**", "/api/check/details/**", "/api/check/reply/**").permitAll()
-        .anyRequest().authenticated();
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     
- // fix H2 database console: Refused to display ' in a frame because it set 'X-Frame-Options' to 'deny'
-    /* http.headers().frameOptions().sameOrigin(); */
-    
-    http.authenticationProvider(authenticationProvider());
 
-    http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+    //http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
     
     return http.build();
     }
@@ -67,8 +73,11 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
+    public RegistrationBean  jwtAuthFilterRegister() {
+        FilterRegistrationBean<AuthTokenFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new AuthTokenFilter());
+		registrationBean.setEnabled(false);
+		return registrationBean;
     }
 
 }

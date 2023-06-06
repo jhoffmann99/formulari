@@ -1,26 +1,24 @@
 package io.jhoffmann.formulari.auth;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.jhoffmann.formulari.exception.NotFoundException;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -29,45 +27,55 @@ public class AuthController {
   AuthenticationManager authenticationManager;
 
   @Autowired
-  UserRepository userRepository;
-
-  @Autowired
   PasswordEncoder encoder;
 
   @Autowired
   JwtUtils jwtUtils;
 
+  private final UserService userService;
+
+  public AuthController(UserService userService) {
+    this.userService = userService;
+  }
+
   @PostMapping("/signin")
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-    Authentication authentication = authenticationManager
-        .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+    Authentication authentication = null;
 
-    SecurityContextHolder.getContext().setAuthentication(authentication);
+    try {
+      authentication = authenticationManager
+          .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-    ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
 
     List<String> roles = userDetails.getAuthorities().stream()
         .map(item -> item.getAuthority())
         .collect(Collectors.toList());
 
-    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-        .body(new UserInfoResponse(userDetails.getId(),
-            userDetails.getUsername(),
-            userDetails.getEmail(),
-            roles));
+    Optional<User> optUser = userService.findUserByEmail(userDetails.getUsername());
+
+    if (optUser.isEmpty()) {
+      throw new NotFoundException("User not found");
+    }
+
+    User user = optUser.get();
+
+    String token = jwtUtils.generateTokenFromUsername(user.getSub());
+
+    UserInfoResponse response = new UserInfoResponse(userDetails.getEmail(), token, roles);
+
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping("/signup")
   @PermitAll
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-    if (userRepository.existsByUsername(signUpRequest.getEmail())) {
-      return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
-    }
 
-    if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+    if (userService.existsByEmail(signUpRequest.getEmail())) {
       return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
     }
 
@@ -76,15 +84,9 @@ public class AuthController {
         signUpRequest.getEmail(),
         encoder.encode(signUpRequest.getPassword()));
 
-    userRepository.save(user);
+    userService.addUser(user);
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }
 
-  @PostMapping("/signout")
-  public ResponseEntity<?> logoutUser() {
-    ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
-    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
-        .body(new MessageResponse("You've been signed out!"));
-  }
 }

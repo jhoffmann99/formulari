@@ -55,7 +55,7 @@ public class CheckService {
 
         TemplateEntity template = optTemplate.get();
 
-        Optional<User> optUser = userService.findUserByUsername(userDetails.getUsername());
+        Optional<User> optUser = userService.findUserBySub(userDetails.getUsername());
 
         if (optUser.isEmpty()) {
             throw new NotFoundException("User not found");
@@ -184,7 +184,7 @@ public class CheckService {
     }
 
     private void validateYesNoFieldValue(Object value) {
-        if (!(value instanceof String || value.equals("ja") || value.equals("nein")) ) {
+        if (!(value instanceof String || value.equals("ja") || value.equals("nein"))) {
             throw new ValidationException("provided value is not valid");
         }
     }
@@ -223,7 +223,7 @@ public class CheckService {
         System.out.println(checkRecipient.getUid());
         // emailService.sendEmail(email);
     }
-    
+
     public void sendCheckReminder(CheckRecipientEntity checkRecipient) {
         Email email = new Email();
         email.setRecipients(List.of(checkRecipient.getEmail()));
@@ -233,9 +233,6 @@ public class CheckService {
         System.out.println(checkRecipient.getUid());
         emailService.sendEmail(email);
     }
-
-
-
 
     public Optional<CheckRecipientEntity> findCheckRecipientByUid(String uid) {
         return checkRecipientRepository.findByUid(uid);
@@ -256,7 +253,7 @@ public class CheckService {
     }
 
     public List<CheckRecipientEntity> getCheckReplies(UserDetails userDetails) {
-        Optional<User> optUser = userService.findUserByUsername(userDetails.getUsername());
+        Optional<User> optUser = userService.findUserBySub(userDetails.getUsername());
 
         if (optUser.isEmpty()) {
             throw new NotFoundException("User not found");
@@ -264,11 +261,11 @@ public class CheckService {
 
         User user = optUser.get();
 
-        return checkRecipientRepository.findReplies(user.getUsername());
+        return checkRecipientRepository.findReplies(user.getSub());
     }
 
     public List<CheckRecipientEntity> getOpenCheckReplies(UserDetails userDetails) {
-        Optional<User> optUser = userService.findUserByUsername(userDetails.getUsername());
+        Optional<User> optUser = userService.findUserBySub(userDetails.getUsername());
 
         if (optUser.isEmpty()) {
             throw new NotFoundException("User not found");
@@ -276,11 +273,11 @@ public class CheckService {
 
         User user = optUser.get();
 
-        return checkRecipientRepository.findOpenReplies(user.getUsername());
+        return checkRecipientRepository.findOpenReplies(user.getSub());
     }
 
     public List<CheckRecipientEntity> getArchivedCheckReplies(UserDetails userDetails) {
-        Optional<User> optUser = userService.findUserByUsername(userDetails.getUsername());
+        Optional<User> optUser = userService.findUserBySub(userDetails.getUsername());
 
         if (optUser.isEmpty()) {
             throw new NotFoundException("User not found");
@@ -288,7 +285,7 @@ public class CheckService {
 
         User user = optUser.get();
 
-        return checkRecipientRepository.findArchivedReplies(user.getUsername());
+        return checkRecipientRepository.findArchivedReplies(user.getSub());
     }
 
     public Optional<CheckEntity> findCheckById(Long checkId) {

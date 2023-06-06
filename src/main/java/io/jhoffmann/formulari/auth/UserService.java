@@ -12,11 +12,23 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Optional<User> findUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public Optional<User> findUserBySub(String sub) {
+        return userRepository.findBySub(sub);
+    }
+
+    public Optional<User> findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     public void updateUser(User user) {
+        userRepository.save(user);
+    }
+
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public void addUser(User user) {
         userRepository.save(user);
     }
 }

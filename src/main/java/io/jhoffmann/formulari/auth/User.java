@@ -3,6 +3,7 @@ package io.jhoffmann.formulari.auth;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import io.jhoffmann.formulari.subscription.SubscriptionEntity;
 import io.jhoffmann.formulari.subscription.SubscriptionStatus;
@@ -13,7 +14,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "username"),
+    @UniqueConstraint(columnNames = "sub"),
     @UniqueConstraint(columnNames = "email")
 })
 public class User {
@@ -23,7 +24,7 @@ public class User {
 
   @NotBlank
   @Size(max = 50)
-  private String username;
+  private String sub;
 
   @NotBlank
   @Size(max = 50)
@@ -45,7 +46,7 @@ public class User {
   }
 
   public User(String email, String password) {
-    this.username = email;
+    this.sub = UUID.randomUUID().toString();
     this.email = email;
     this.password = password;
     addRolle(Role.ROLE_USER);
@@ -59,12 +60,12 @@ public class User {
     this.id = id;
   }
 
-  public String getUsername() {
-    return username;
+  public String getSub() {
+    return sub;
   }
 
-  public void setUsername(String username) {
-    this.username = username;
+  public void setSub(String username) {
+    this.sub = username;
   }
 
   public String getEmail() {
@@ -108,6 +109,7 @@ public class User {
   }
 
   public Optional<SubscriptionEntity> getActiveSubscription() {
-    return this.subscriptions.stream().filter(subscription -> subscription.getStatus() == SubscriptionStatus.ACTIVE).findFirst();
+    return this.subscriptions.stream().filter(subscription -> subscription.getStatus() == SubscriptionStatus.ACTIVE)
+        .findFirst();
   }
 }
